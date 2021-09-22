@@ -10,10 +10,10 @@ class Auth_model extends CI_Model
     {
         $username = $this->input->post('username');
         $password = $this->input->post('password');
+        $level    = "Admin";
 
 
-        $this->db->where("username", $username);
-        $query = $this->db->get($this->table);
+        $query = $this->db->query("SELECT * FROM users where username='$username' and password='$password' and level='$level'");
 
         if ($query->num_rows()) {
             // found row by username	

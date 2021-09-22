@@ -27,7 +27,7 @@ $string="
                         <p class=\"mb-30\"></p>
                     </div>
                 </div>
-                <form action=\"<?php echo \$action; ?>\" method=\"post\" class=\"form-horizontal\">";
+                <form action=\"\" method=\"post\" class=\"form-horizontal\">";
                 foreach ($non_pk as $row) {
                   if ($row["data_type"] == 'text')
                   {

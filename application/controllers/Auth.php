@@ -7,10 +7,11 @@
 class Auth extends MY_Controller
 {
 
+    
     public function logged_in_check()
     {
         if ($this->session->userdata("logged_in")) {
-            redirect("dashboard");
+            redirect("panel");
         }
     }
 
@@ -39,7 +40,7 @@ class Auth extends MY_Controller
                 $this->session->set_userdata($this->auth->get_data());
                 $this->session->set_userdata("logged_in", true);
                 // redirect to dashboard
-                redirect("dashboard");
+                redirect("panel");
             }
         }
 
@@ -59,24 +60,8 @@ class Auth extends MY_Controller
     }
 
 
-    public function refresh()
+    public function register()
     {
-        // Captcha configuration
-        $config = array(
-            'img_path'  => './captcha/',
-            'img_url'  => base_url() . 'captcha/',
-            'img_width'  => '130',
-            'img_height' => 30,
-            'border' => 0,
-            'expiration' => 7200
-        );
-        $captcha = create_captcha($config);
-
-        // Unset previous captcha and set new captcha word
-        $this->session->unset_userdata('mycaptcha');
-        $this->session->set_userdata('mycaptcha', $captcha['word']);
-
-        // Display captcha image
-        echo $captcha['image'];
+        $this->load->view("register_client");
     }
 }

@@ -15,6 +15,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 	<!-- Google Font -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/vendors/styles/core.css">
@@ -39,7 +40,9 @@
 		gtag('config', 'UA-119386393-1');
 	</script>
 </head>
-
+<?php if($_SESSION['level']==""){
+	redirect('auth/logout');
+}?>
 <body>
 	<div class="pre-loader">
 		<div class="pre-loader-box">
@@ -135,7 +138,7 @@
 					</a>
 					<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
 						<a class="dropdown-item" href="<?php echo base_url()?>dashboard/profile"><i class="dw dw-user1"></i> Profile</a>
-						<a class="dropdown-item" href="<?php echo base_url()?>auth/logout"><i class="dw dw-logout"></i> Log Out</a>
+						<a class="dropdown-item" href="<?php echo base_url()?>login/logout"><i class="dw dw-logout"></i> Log Out</a>
 					</div>
 				</div>
 			</div>
@@ -237,15 +240,14 @@
 							<span class="micon dw dw-house-1"></span><span class="mtext">Dashboard</span>
 						</a>
 					</li>
-					<li class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle">
-							<span class="micon dw dw-apartment"></span><span class="mtext"> UI Elements </span>
+					<?php $menu = $this->db->query("SELECT a.menu,a.link from menu a join access_level b on a.id=b.menu where b.user_level='{$_SESSION['level']}' and b.status='1' order by a.urutan asc"); ?>
+					<?php foreach ($menu->result() as $rows) : ?>
+					<li>
+						<a href="<?php echo base_url($rows->link) ?>" class="dropdown-toggle no-arrow">
+							<span class="micon dw dw-apartment"></span><span class="mtext"><?= $rows->menu ?></span>
 						</a>
-						<ul class="submenu">
-							<li><a href="ui-buttons.html">Buttons</a></li>
-						</ul>
 					</li>
-					
+					<?php endforeach; ?>
 				</ul>
 			</div>
 		</div>

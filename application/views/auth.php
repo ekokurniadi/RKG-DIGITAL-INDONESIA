@@ -22,7 +22,7 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/vendors/styles/style.css">
 	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
+	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-119386393-1"></script>
 	<script>
@@ -36,6 +36,8 @@
 		gtag('config', 'UA-119386393-1');
 	</script>
 </head>
+
+
 
 <body class="login-page">
 
@@ -51,20 +53,7 @@
 						<div class="login-title">
 							<h2 class="text-center text-dark">LOGIN TO<br> RKG DIGITAL INDONESIA</h2>
 						</div>
-						<div class="select-role">
-							<div class="btn-group btn-group-toggle" data-toggle="buttons">
-								<label class="btn">
-									<input type="radio" name="options" id="user" value="user">
-									<div class="icon"><img src="<?php echo base_url() ?>assets/vendors/images/person.svg" class="svg" alt=""></div>
-									<span>Client</span>
-								</label>
-								<label class="btn active">
-									<input type="radio" name="options" id="admin" value="pembaca">
-									<div class="icon"><img src="<?php echo base_url() ?>assets/vendors/images/briefcase.svg" class="svg" alt=""></div>
-									<span>Pembaca Foto</span>
-								</label>
-							</div>
-						</div>
+
 						<form method="POST" action="#" class="needs-validation" novalidate="" id="clientForm">
 							<form accept-charset="UTF-8" role="form" class="form-signin">
 								<div class="input-group custom">
@@ -95,52 +84,19 @@
 										<div class="input-group mb-0">
 											<input class="btn btn-primary btn-lg btn-block" type="submit" value="Sign In">
 										</div>
-										<div class="font-16 weight-600 pt-10 pb-10 text-center" data-color="#707373">OR</div>
-										<div class="input-group mb-0">
-											<a class="btn btn-outline-primary btn-lg btn-block" href="register.html">Register To Create Account</a>
-										</div>
+										
 									</div>
 								</div>
 							</form>
-							<form method="POST" action="#" class="needs-validation" novalidate="" id="PembacaForm">
-								<form accept-charset="UTF-8" role="form" class="form-signin">
-									<div class="input-group custom">
-										<input type="text" class="form-control form-control-lg" name="username" required placeholder="Username">
-										<div class="input-group-append custom">
-											<span class="input-group-text"><i class="icon-copy dw dw-user1"></i></span>
-										</div>
-									</div>
-									<div class="input-group custom">
-										<input type="password" class="form-control form-control-lg" name="password" id="password" required placeholder="**********">
-										<div class="input-group-append custom">
-											<span class="input-group-text"><i class="dw dw-padlock1"></i></span>
-										</div>
-									</div>
-									<div class="row pb-30">
-										<div class="col-6">
-											<div class="custom-control custom-checkbox">
-												<input type="checkbox" onclick="Toggle()" class="custom-control-input" id="customCheck1">
-												<label class="custom-control-label" for="customCheck1">Show Password</label>
-											</div>
-										</div>
-										<div class="col-6">
 
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="input-group mb-0">
-												<input class="btn btn-primary btn-lg btn-block" type="submit" value="Sign In">
-											</div>
-
-										</div>
-									</div>
-								</form>
 					</div>
 				</div>
 			</div>
 		</div>
+
 	</div>
+
+
 	<div style="margin-top: 8px" id="message">
 		<?php
 		if (isset($_SESSION['pesan']) && $_SESSION['pesan'] <> '') {

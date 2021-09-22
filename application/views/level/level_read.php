@@ -25,7 +25,7 @@
                         <p class="mb-30"></p>
                     </div>
                 </div>
-                <form action="<?php echo $action; ?>" method="post" class="form-horizontal">
+                <form action="" method="post" class="form-horizontal">
 	   
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Level <?php echo form_error('level') ?></label>
