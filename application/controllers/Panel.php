@@ -10,6 +10,8 @@ class Panel extends MY_Controller
         $this->load->library('form_validation');
     }
 
+
+
     public function index()
     {
         $this->load->view('header');

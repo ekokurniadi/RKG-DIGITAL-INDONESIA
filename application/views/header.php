@@ -7,9 +7,9 @@
 	<title>Dashboard</title>
 
 	<!-- Site favicon -->
-	<link rel="apple-touch-icon" sizes="180x180" href="<?php echo base_url() ?>assets/<?php echo base_url() ?>assets/vendors/images/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="<?php echo base_url() ?>assets/<?php echo base_url() ?>assets/vendors/images/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url() ?>assets/<?php echo base_url() ?>assets/vendors/images/favicon-16x16.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="<?php echo base_url() ?>assets/vendors/images/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="<?php echo base_url() ?>assets/vendors/images/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url() ?>assets/vendors/images/favicon-16x16.png">
 
 	<!-- Mobile Specific Metas -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -39,10 +39,27 @@
 
 		gtag('config', 'UA-119386393-1');
 	</script>
+	<script src="<?= base_url("js/vue/qs.min.js") ?>" type="text/javascript"></script>
+	<script src="<?= base_url("js/vue/vue.min.js") ?>" type="text/javascript"></script>
+	<script src="<?= base_url("js/vue/axios.min.js") ?>" type="text/javascript"></script>
+	<script src="<?= base_url("js/vue/accounting.js") ?>" type="text/javascript"></script>
+	<script src="<?= base_url("js/vue/vue-numeric.min.js") ?>" type="text/javascript"></script>
+	<script src="<?= base_url("js/lodash.min.js") ?>" type="text/javascript"></script>
+	<script type="text/javascript" src="<?= base_url("js/moment.min.js") ?>"></script>
+	<script type="text/javascript" src="<?= base_url("js/daterangepicker.min.js") ?>"></script>
+	<link rel="stylesheet" type="text/css" href="<?= base_url("js/daterangepicker.css") ?>" />
+	<script>
+		Vue.use(VueNumeric.default);
+		Vue.filter('toCurrency', function(value) {
+			return accounting.formatMoney(value, "", 0, ".", ",");
+			return value;
+		});
+	</script>
 </head>
-<?php if($_SESSION['level']==""){
+<?php if ($_SESSION['level'] == "") {
 	redirect('auth/logout');
-}?>
+} ?>
+
 <body>
 	<div class="pre-loader">
 		<div class="pre-loader-box">
@@ -107,21 +124,14 @@
 				</div>
 			</div>
 			<div class="user-notification">
-				<div class="dropdown">
+				<div id="expand" class="dropdown">
 					<a class="dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown">
 						<i class="icon-copy dw dw-notification"></i>
-						<span class="badge notification-active"></span>
+						<span id="badge" class="notification-active"></span>
 					</a>
-					<div class="dropdown-menu dropdown-menu-right">
+					<div id="menu-right" class="dropdown-menu dropdown-menu-right">
 						<div class="notification-list mx-h-350 customscroll">
-							<ul>
-								<li>
-									<a href="#">
-										<img src="<?php echo base_url() ?>assets/vendors/images/img.jpg" alt="">
-										<h3>John Doe</h3>
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed...</p>
-									</a>
-								</li>
+							<ul class="dropdown-notif">
 
 							</ul>
 						</div>
@@ -134,11 +144,11 @@
 						<span class="user-icon">
 							<img src="<?php echo base_url() ?>assets/vendors/images/photo1.jpg" alt="">
 						</span>
-						<span class="user-name"><?=$_SESSION['nama']?></span>
+						<span class="user-name"><?= $_SESSION['nama'] ?></span>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-						<a class="dropdown-item" href="<?php echo base_url()?>dashboard/profile"><i class="dw dw-user1"></i> Profile</a>
-						<a class="dropdown-item" href="<?php echo base_url()?>login/logout"><i class="dw dw-logout"></i> Log Out</a>
+						<a class="dropdown-item" href="<?php echo base_url() ?>panel/profile"><i class="dw dw-user1"></i> Profile</a>
+						<a class="dropdown-item" href="<?php echo base_url() ?>auth/logout"><i class="dw dw-logout"></i> Log Out</a>
 					</div>
 				</div>
 			</div>
@@ -225,7 +235,7 @@
 		<div class="brand-logo">
 			<a href="index.html">
 				<img src="<?php echo base_url() ?>uploads/logo/logo-transparent.png" width="20%" alt="" class="dark-logo">
-				<img src="<?php echo base_url() ?>uploads/logo/logo-transparent.png"  width="20%" alt="" class="light-logo">
+				<img src="<?php echo base_url() ?>uploads/logo/logo-transparent.png" width="20%" alt="" class="light-logo">
 				<span style="font-size: 8pt;">RKG DIGITAL INDONESIA</span>
 			</a>
 			<div class="close-sidebar" data-toggle="left-sidebar-close">
@@ -236,17 +246,17 @@
 			<div class="sidebar-menu">
 				<ul id="accordion-menu">
 					<li>
-						<a href="calendar.html" class="dropdown-toggle no-arrow">
+						<a href="<?=base_url('panel')?>" class="dropdown-toggle no-arrow">
 							<span class="micon dw dw-house-1"></span><span class="mtext">Dashboard</span>
 						</a>
 					</li>
 					<?php $menu = $this->db->query("SELECT a.menu,a.link from menu a join access_level b on a.id=b.menu where b.user_level='{$_SESSION['level']}' and b.status='1' order by a.urutan asc"); ?>
 					<?php foreach ($menu->result() as $rows) : ?>
-					<li>
-						<a href="<?php echo base_url($rows->link) ?>" class="dropdown-toggle no-arrow">
-							<span class="micon dw dw-apartment"></span><span class="mtext"><?= $rows->menu ?></span>
-						</a>
-					</li>
+						<li>
+							<a href="<?php echo base_url($rows->link) ?>" class="dropdown-toggle no-arrow">
+								<span class="micon dw dw-apartment"></span><span class="mtext"><?= $rows->menu ?></span>
+							</a>
+						</li>
 					<?php endforeach; ?>
 				</ul>
 			</div>
@@ -273,3 +283,59 @@
 
 		?>
 	</div>
+
+	<script>
+		$(document).ready(function() {
+			getPengumuman();
+			setInterval(getPengumuman, 5000);
+
+		})
+
+		function getPengumuman() {
+			$.ajax({
+				url: "<?php echo site_url('api/getNotificationAdmin'); ?>",
+				cache: false,
+				type: "POST",
+				dataType: 'JSON',
+				success: function(response) {
+					showPengumuman(response);
+					if (response.data.length > 0) {
+						$('#badge').attr('class', 'badge');
+
+					} else {
+						$('#badge').removeClass('class', 'badge');
+
+						$(".dropdown-notif").html('');
+						var html = '';
+						html += "<li>Tidak ada Notifikasi</li>";
+						$(".dropdown-notif").append(html);
+					}
+				},
+			});
+		}
+
+		function showPengumuman(response) {
+			$(".dropdown-notif").html('');
+			var html = '';
+			for (rsp of response.data) {
+				html += "<li><a href='" + rsp[2] + "' onclick='updateNotif(rsp[0])'><span class='icon-copy dw dw-message-1'></span><h3>" + '<?= "Hai " . $_SESSION['nama'] ?>' + "</h3><p>" + rsp[3] + "</p><em style='font-size:12px'> <i class='fa fa-history'></i> " + rsp[1] + "</em></a></li>";
+
+			}
+
+			$(".dropdown-notif").append(html);
+		}
+
+		function updateNotif(id) {
+			$.ajax({
+				url: '<?= base_url('api/updateNotif') ?>',
+				type: 'POST',
+				cache: false,
+				data: {
+					id: id
+				},
+				success: function(response) {
+					// alert(response);
+				}
+			});
+		}
+	</script>

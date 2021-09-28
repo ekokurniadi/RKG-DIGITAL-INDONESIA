@@ -258,8 +258,8 @@ var options4 = {
     labels: ['Flu', 'Covid-19', 'Pheumoniae', 'Diabeties'],
 };
 
-var chart = new ApexCharts(document.querySelector("#activities-chart"), options);
-chart.render();
+// var chart = new ApexCharts(document.querySelector("#activities-chart"), options);
+// chart.render();
 
 var chart2 = new ApexCharts(document.querySelector("#appointment-chart"), options2);
 chart2.render();

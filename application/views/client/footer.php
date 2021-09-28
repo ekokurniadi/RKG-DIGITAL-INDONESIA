@@ -8,7 +8,7 @@
 	<script src="<?php echo base_url() ?>assets/vendors/scripts/script.min.js"></script>
 	<script src="<?php echo base_url() ?>assets/vendors/scripts/process.js"></script>
 	<script src="<?php echo base_url() ?>assets/vendors/scripts/layout-settings.js"></script>
-	<script src="<?php echo base_url() ?>assets/src/plugins/apexcharts/apexcharts.min.js"></script>
+	<!-- <script src="<?php echo base_url() ?>assets/src/plugins/apexcharts/apexcharts.min.js"></script> -->
 
 	<script src="<?php echo base_url()?>assets/src/plugins/datatables/js/jquery.dataTables.min.js"></script>
 	<script src="<?php echo base_url()?>assets/src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
@@ -30,7 +30,17 @@
 	<script src="<?php echo base_url() ?>assets/vendors/scripts/dashboard3.js"></script>
 	<script src="<?php echo base_url() ?>assets/src/plugins/sweetalert2/sweetalert2.all.js"></script>
 	<script src="<?php echo base_url() ?>assets/src/plugins/sweetalert2/sweet-alert.init.js"></script>
-	
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js"></script>
+	<script>
+		function validationError() {
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Silahkan isi data dengan lengkap !',
+				
+			});
+		}
+	</script>
 	</body>
 
 	</html>

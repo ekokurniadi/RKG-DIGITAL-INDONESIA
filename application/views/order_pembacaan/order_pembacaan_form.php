@@ -1,3 +1,4 @@
+
 <div class="main-container" style="min-height:100%">
   <div class="pd-ltr-20 xs-pd-20-10">
     <div class="min-height-200px">
@@ -29,21 +30,21 @@
           <div class="form-group row">
             <label class="col-sm-12 col-md-2 col-form-label">Id Order <?php echo form_error('id_order') ?></label>
             <div class="col-sm-12 col-md-10">
-              <input type="text" readonly class="form-control" name="id_order" id="id_order" placeholder="Id Order" value="<?php echo $id_order; ?>" />
+              <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" readonly class="form-control" name="id_order" id="id_order" placeholder="Id Order" value="<?php echo $id_order; ?>" />
             </div>
           </div>
 
           <div class="form-group row">
             <label class="col-sm-12 col-md-2 col-form-label">No Rekam Medis <?php echo form_error('no_rekam_medis') ?></label>
             <div class="col-sm-12 col-md-10">
-              <input type="text" class="form-control" name="no_rekam_medis" id="no_rekam_medis" placeholder="No Rekam Medis" value="<?php echo $no_rekam_medis; ?>" />
+              <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="no_rekam_medis" id="no_rekam_medis" placeholder="No Rekam Medis" value="<?php echo $no_rekam_medis; ?>" />
             </div>
           </div>
 
           <div class="form-group row">
             <label class="col-sm-12 col-md-2 col-form-label">Dokter Pengirim <?php echo form_error('dokter_pengirim') ?></label>
             <div class="col-sm-12 col-md-10">
-              <input type="text" class="form-control" name="dokter_pengirim" id="dokter_pengirim" placeholder="Dokter Pengirim" value="<?php echo $dokter_pengirim; ?>" />
+              <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="dokter_pengirim" id="dokter_pengirim" placeholder="Dokter Pengirim" value="<?php echo $dokter_pengirim; ?>" />
             </div>
           </div>
 
@@ -57,14 +58,15 @@
           <div class="form-group row">
             <label class="col-sm-12 col-md-2 col-form-label">Lampiran(Foto/Video) <?php echo form_error('foto') ?></label>
             <div class="col-sm-12 col-md-10">
-              <input type="file" class="form-control" name="foto" id="foto" placeholder="Foto" value="<?php echo $foto; ?>" />
+              <input <?= $button == 'Read' ? 'readonly' : "" ?> type="file" class="form-control" name="foto" id="foto" placeholder="Foto" value="<?php echo $foto; ?>" />
             </div>
-            <?php if ($button == "Update") { ?>
+            <?php if ($button == "Update" or $button == "Read") { ?>
               <label class="col-sm-12 col-md-2 col-form-label">Preview <?php echo form_error('foto') ?></label>
               <?php
               $file_parts = pathinfo($foto);
               if ($file_parts) {
-                if ($file_parts['extension'] == "jpg" || $file_parts['extension'] == "png" || $file_parts['extension'] == "JPEG" || $file_parts['extension'] == "jpeg") { ?>
+
+                if ($file_parts['extension'] == "jpg" || $file_parts['extension'] == "png" || $file_parts['extension'] == "PNG" || $file_parts['extension'] == "JPEG" || $file_parts['extension'] == "jpeg") { ?>
                   <div class="col-md-12 col-md-10">
                     <img src="<?= base_url('uploads/user_image/' . $foto) ?>" width="50%" alt="">
                   </div>
@@ -81,7 +83,7 @@
 
 
           <div class="form-group row">
-            <input type="button" class="btn btn-success btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="PEMERIKSAAN">
+            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-success btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="PEMERIKSAAN">
           </div>
 
           <div class="form-group row">
@@ -91,12 +93,12 @@
                 <table style="vertical-align: text-top;border-collapse:collapse;padding:0px 2px 0px 2px;font-size:9pt" width="100%">
                   <tr>
                     <td width="50%">
-                      <input type="radio" name="pemeriksaan" value="1" <?= $pemeriksaan == 1 ? "checked" : "" ?>>
+                      <input <?= $button == 'Read' ? 'readonly' : "" ?> type="radio" name="pemeriksaan" value="1" <?= $pemeriksaan == 1 ? "checked" : "" ?>>
                       <label for="">
                         <p>3D CBCT</p>
                       </label>
                     </td>
-                    <td width="50%"><input type="radio" name="pemeriksaan" value="2" <?= $pemeriksaan == 2 ? "checked" : "" ?>>
+                    <td width="50%"><input <?= $button == 'Read' ? 'readonly' : "" ?> type="radio" name="pemeriksaan" value="2" <?= $pemeriksaan == 2 ? "checked" : "" ?>>
                       <label for="">
                         <p>ANALISIS BONE DENSITY ALVEOLAR (HU)</p>
                       </label>
@@ -104,13 +106,13 @@
                   </tr>
                   <tr>
                     <td>
-                      <input type="radio" name="pemeriksaan" value="3" <?= $pemeriksaan == 3 ? "checked" : "" ?>>
+                      <input <?= $button == 'Read' ? 'readonly' : "" ?> type="radio" name="pemeriksaan" value="3" <?= $pemeriksaan == 3 ? "checked" : "" ?>>
                       <label for="">
                         <p>PANORAMIK</p>
                       </label>
                     </td>
                     <td>
-                      <input type="radio" name="pemeriksaan" value="4" <?= $pemeriksaan == 4 ? "checked" : "" ?>>
+                      <input <?= $button == 'Read' ? 'readonly' : "" ?> type="radio" name="pemeriksaan" value="4" <?= $pemeriksaan == 4 ? "checked" : "" ?>>
                       <label for="">
                         <p>PERIAPIKAL</p>
                       </label>
@@ -118,13 +120,13 @@
                   </tr>
                   <tr>
                     <td>
-                      <input type="radio" name="pemeriksaan" value="5" <?= $pemeriksaan == 5 ? "checked" : "" ?>>
+                      <input <?= $button == 'Read' ? 'readonly' : "" ?> type="radio" name="pemeriksaan" value="5" <?= $pemeriksaan == 5 ? "checked" : "" ?>>
                       <label for="">
                         <p>TMJ</p>
                       </label>
                     </td>
                     <td>
-                      <input type="radio" name="pemeriksaan" value="6" <?= $pemeriksaan == 6 ? "checked" : "" ?>>
+                      <input <?= $button == 'Read' ? 'readonly' : "" ?> type="radio" name="pemeriksaan" value="6" <?= $pemeriksaan == 6 ? "checked" : "" ?>>
                       <label for="">
                         <p>BITE-WING</p>
                       </label>
@@ -132,13 +134,13 @@
                   </tr>
                   <tr>
                     <td>
-                      <input type="radio" name="pemeriksaan" value="7" <?= $pemeriksaan == 7 ? "checked" : "" ?>>
+                      <input <?= $button == 'Read' ? 'readonly' : "" ?> type="radio" name="pemeriksaan" value="7" <?= $pemeriksaan == 7 ? "checked" : "" ?>>
                       <label for="">
                         <p>CHEPALOMETRI</p>
                       </label>
                     </td>
                     <td>
-                      <input type="radio" name="pemeriksaan" value="8" <?= $pemeriksaan == 8 ? "checked" : "" ?>>
+                      <input <?= $button == 'Read' ? 'readonly' : "" ?> type="radio" name="pemeriksaan" value="8" <?= $pemeriksaan == 8 ? "checked" : "" ?>>
                       <label for="">
                         <p>OCCLUSAL</p>
                       </label>
@@ -165,15 +167,15 @@
                       }
                     } ?>
                     <td colspan="2">&nbsp;
-                      <input type="checkbox" name="detail[]" value="PA" <?= $st ?>>
+                      <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" name="detail[]" value="PA" <?= $st ?>>
                       <label for="">
                         <p>PA</p>
                       </label>
-                      <input type="checkbox" name="detail[]" value="Lateral" <?= $st1 ?>>
+                      <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" name="detail[]" value="Lateral" <?= $st1 ?>>
                       <label for="">
                         <p>Lateral</p>
                       </label>
-                      <input type="checkbox" name="detail[]" value="Waters" <?= $st2 ?>>
+                      <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" name="detail[]" value="Waters" <?= $st2 ?>>
                       <label for="">
                         <p>Waters</p>
                       </label>
@@ -181,7 +183,7 @@
 
                   </tr>
                   <tr>
-                    <td colspan="2"><input type="text" class="form-control" name="catatan" value="<?= $catatan ?>" id="catatan" placeholder="Catatan"></td>
+                    <td colspan="2"><input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="catatan" value="<?= $catatan ?>" id="catatan" placeholder="Catatan"></td>
                   </tr>
                 </table>
               </div>
@@ -189,7 +191,7 @@
           </div>
 
           <div class="form-group row">
-            <input type="button" class="btn btn-success btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="REGIO">
+            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-success btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="REGIO">
           </div>
           <div class="form-group row">
             <div class="col-md-12">
@@ -213,7 +215,7 @@
                       ?>
                       <td style="border-bottom: 2px solid green;">
                         <?php echo $ka->angka ?>
-                        <input type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="kiri_atas[]">
+                        <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="kiri_atas[]">
                       </td>
                     <?php endforeach; ?>
                     <td width="20px" rowspan="2" align="center">
@@ -235,7 +237,7 @@
                       ?>
                       <td style="border-bottom: 2px solid green;">
                         <?php echo $kn->angka ?>
-                        <input type="checkbox" <?= $state ?> value="<?php echo $kn->id ?>" name="kanan_atas[]">
+                        <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $kn->id ?>" name="kanan_atas[]">
                       </td>
                     <?php endforeach; ?>
                   </tr>
@@ -255,7 +257,7 @@
                       ?>
                       <td>
                         <?php echo $ka->angka ?>
-                        <input type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="kiri_bawah[]">
+                        <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="kiri_bawah[]">
                       </td>
                     <?php endforeach; ?>
                     <!-- <td width="5px" rowspan="2" align="left"><div style="background-color: green;width:2px">&nbsp;</div></td> -->
@@ -274,7 +276,7 @@
                       ?>
                       <td>
                         <?php echo $kn->angka ?>
-                        <input type="checkbox" <?= $state ?> value="<?php echo $kn->id ?>" name="kanan_bawah[]">
+                        <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $kn->id ?>" name="kanan_bawah[]">
                       </td>
                     <?php endforeach; ?>
                   </tr>
@@ -308,7 +310,7 @@
                       ?>
                       <td style="border-bottom: 2px solid green;">
                         <?php echo $ka->angka ?>
-                        <input type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="romawi_kiri_atas[]">
+                        <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="romawi_kiri_atas[]">
                       </td>
                     <?php endforeach; ?>
                     <td width="20px" rowspan="2" align="center">
@@ -330,7 +332,7 @@
                       ?>
                       <td style="border-bottom: 2px solid green;">
                         <?php echo $kn->angka ?>
-                        <input type="checkbox" <?= $state ?> value="<?php echo $kn->id ?>" name="romawi_kanan_atas[]">
+                        <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $kn->id ?>" name="romawi_kanan_atas[]">
                       </td>
                     <?php endforeach; ?>
                   </tr>
@@ -350,7 +352,7 @@
                       ?>
                       <td>
                         <?php echo $ka->angka ?>
-                        <input type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="romawi_kiri_bawah[]">
+                        <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="romawi_kiri_bawah[]">
                       </td>
                     <?php endforeach; ?>
                     <!-- <td width="5px" rowspan="2" align="left"><div style="background-color: green;width:2px">&nbsp;</div></td> -->
@@ -369,7 +371,7 @@
                       ?>
                       <td>
                         <?php echo $kn->angka ?>
-                        <input type="checkbox" <?= $state ?> value="<?php echo $kn->id ?>" name="romawi_kanan_bawah[]">
+                        <input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $kn->id ?>" name="romawi_kanan_bawah[]">
                       </td>
                     <?php endforeach; ?>
                   </tr>
@@ -381,7 +383,7 @@
           <div class="form-group row">
             <label class="col-sm-12 col-md-2 col-form-label">Dokter Pemeriksa <?php echo form_error('dokter_pemeriksa') ?></label>
             <div class="col-sm-12 col-md-10">
-              <input type="text" class="form-control" name="dokter_pemeriksa" id="dokter_pemeriksa" placeholder="Dokter Pemeriksa" value="<?php echo $dokter_pemeriksa; ?>" />
+              <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="dokter_pemeriksa" id="dokter_pemeriksa" placeholder="Dokter Pemeriksa" value="<?php echo $dokter_pemeriksa; ?>" />
             </div>
           </div>
 
@@ -394,8 +396,10 @@
 
 
           <div class="text-left">
-            <input type="hidden" name="id" value="<?php echo $id; ?>" />
-            <button type="submit" id="btnSubmit" class="btn btn-primary"><span class="fa fa-edit"></span><?php echo $button ?></button>
+            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="hidden" name="id" value="<?php echo $id; ?>" />
+            <?php if ($button != "Read") : ?>
+              <button type="submit" id="btnSubmit" class="btn btn-primary"><span class="fa fa-edit"></span><?php echo $button ?></button>
+            <?php endif; ?>
             <a href="<?php echo site_url('order_pembacaan') ?>" class="btn btn-icon icon-left btn-success">Cancel</a>
 
         </form>
@@ -403,3 +407,12 @@
     </div>
   </div>
 </div>
+
+<script>
+  $(':checkbox[readonly]').click(function() {
+    return false;
+  });
+  $(':radio[readonly]').click(function() {
+    return false;
+  });
+</script>

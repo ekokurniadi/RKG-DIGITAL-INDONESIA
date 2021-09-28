@@ -58,7 +58,7 @@
                     <div class="card-footer text-left">
                         <input type="hidden" name="id" value="<?php echo $id; ?>" />
                         <button type="submit" class="btn btn-primary"><span class="fa fa-edit"></span><?php echo $button ?></button>
-                        <a href="<?php echo site_url('dashboard') ?>" class="btn btn-icon icon-left btn-success">Cancel</a>
+                        <a href="<?php echo site_url('panel') ?>" class="btn btn-icon icon-left btn-success">Cancel</a>
 
                 </form>
             </div>

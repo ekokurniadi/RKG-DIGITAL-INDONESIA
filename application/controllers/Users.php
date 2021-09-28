@@ -376,6 +376,7 @@ class Users extends MY_Controller
                 'username' => $this->input->post('username', TRUE),
                 'password' => $this->input->post('password', TRUE),
                 'level' => "Pembaca Gambar",
+                "lengkap"=>1
             );
 
             $this->Users_model->insert($data);
@@ -397,6 +398,7 @@ class Users extends MY_Controller
                 'username' => $this->input->post('username', TRUE),
                 'password' => $this->input->post('password', TRUE),
                 'level' => "Admin",
+                "lengkap"=>1
             );
 
             $this->Users_model->insert($data);

@@ -59,9 +59,6 @@ function upload_gambar_biasa($nama_gambar, $lokasi_gambar, $tipe_gambar, $ukuran
 		$result1 = $CI->upload->data();
 		$result = array('gambar' => $result1);
 		$dfile = $result['gambar']['file_name'];
-		$_SESSION['pesan'] = "Upload berhasil";
-		$_SESSION['tipe'] = "success";
-
 		return $dfile;
 	}
 }

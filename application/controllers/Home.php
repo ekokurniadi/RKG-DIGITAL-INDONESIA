@@ -27,15 +27,6 @@ class Home extends CI_Controller
                 $google_service = new Google_Service_Oauth2($google_client);
                 $data = $google_service->userinfo->get();
                 $current_datetime = date('Y-m-d H:i:s');
-                // $user_data = array(
-                //     'first_name' => $data['given_name'],
-                //     'last_name'  => $data['family_name'],
-                //     'email_address' => $data['email'],
-                //     'profile_picture' => $data['picture'],
-                //     'updated_at' => $current_datetime
-                // );
-                // print_r($user_data);
-                // $this->session->set_userdata('user_data', $user_data);
             }
         }
         $login_button = '';
@@ -44,10 +35,6 @@ class Home extends CI_Controller
             $login_button = $google_client->createAuthUrl();
             $data['login_button'] = $login_button;
         } else {
-            // uncomentar kode dibawah untuk melihat data session email
-            // echo json_encode($this->session->userdata('access_token')); 
-            // echo json_encode($this->session->userdata('user_data'));
-            // echo "Login success";  
             $login_button = $google_client->createAuthUrl();
             $data['login_button'] = $login_button;
 
@@ -56,7 +43,4 @@ class Home extends CI_Controller
         $this->load->view('landing/index',$data);
     }
 
-    public function login()
-    {
-    }
 }

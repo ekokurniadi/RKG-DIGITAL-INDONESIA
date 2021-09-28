@@ -9,7 +9,7 @@
             </div>
             <nav aria-label="breadcrumb" role="navigation">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>dashboard">Home</a></li>
+                <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>panel">Home</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Order pembacaan</li>
               </ol>
             </nav>
@@ -20,18 +20,25 @@
       <div class="card-box mb-30">
         <div class="pd-20">
           <h4 class="text-dark h4"><i class="icon-copy dw dw-newspaper"></i> Order pembacaan</h4>
-          <?php echo anchor(site_url('order_pembacaan/create'), '<i class="icon-copy dw dw-add-file-1"></i> Add New', 'class="btn btn-primary"'); ?>
+          <?php echo anchor(site_url('orders'), ' Kembali', 'class="btn btn-primary"'); ?>
         </div>
         <div class="pb-20">
           <div class="table-responsive">
             <table class="data-table table hover nowrap" id="example1">
               <thead>
                 <tr>
-                  <!-- <th>No</th> -->
-                  <th>Order</th>
+                  <th>No</th>
+                  <th>No Order</th>
+                  <th>Tanggal Order</th>
+                  <th>Client</th>
+                  <th>Dokter Pengirim</th>
+                  <th>Indikasi Pemeriksaan</th>
+                  <th>Pembaca</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
-              <tbody align="left" style="text-align: left;"></tbody>
+              <tbody></tbody>
             </table>
             <script>
               $(document).ready(function() {
@@ -39,6 +46,7 @@
                   "processing": true,
                   "serverSide": true,
                   "scrollX": false,
+                  "autoWidth": true,
                   "language": {
                     "infoFiltered": "",
                     "processing": "<td style='text-align:center;width:100%;display:block;'><i class='fa fa-spinner fa-spin' style='font-size:80px'></i> </td>",
@@ -49,7 +57,7 @@
                     [10, 25, 50, 75, 100]
                   ],
                   "ajax": {
-                    url: "<?php echo site_url('order_pembacaan/fetch_data'); ?>",
+                    url: "<?php echo site_url('orders/fetch_history'); ?>",
                     type: "POST",
                     dataSrc: "data",
                     data: function(d) {
@@ -68,7 +76,7 @@
                     order: 'applied',
                     page: 'applied'
                   }).nodes().each(function(cell, i) {
-                    // cell.innerHTML = i + 1 + info.start + ".";
+                    cell.innerHTML = i + 1 + info.start + ".";
                   });
                 });
               });
@@ -80,21 +88,24 @@
   </div>
 </div>
 
-<?php $this->load->view('modal_upload') ?>
-<?php $this->load->view('modal_revisi') ?>
+<?php $this->load->view('modal_pilih_user') ?>
 
 <script>
-  function open_modal(id) {
-
+  function openModal(id, pilihPembaca, idClient) {
     $.ajax({
-      url: '<?php echo base_url('order_pembacaan/upload_bukti/') ?>',
+      url: '<?php echo base_url('api/tentukan') ?>',
       type: 'POST',
+      data: {
+        id: id,
+        fun: pilihPembaca,
+      },
       dataType: 'JSON',
       cache: false,
-      data:{id:id},
       success: function(response) {
         $('[name="idOrder"]').val(response.data.id);
-        $('#modalUploadFoto').modal('show');
+        $('[name="client_id"]').val(response.data.idClient);
+        $('#modalPilihUser').modal('show');
+        dataTable2.draw();
       },
       error: function(jqXHR, textStatus, errorThrown) {
         alert('something when wrong');
@@ -102,51 +113,37 @@
     });
   }
 
-  function open_modalRevisi(id) {
+  function getUser(id, orderId, idClient) {
+
     $.ajax({
-      url: '<?php echo base_url('order_pembacaan/upload_bukti/') ?>' ,
+      url: '<?php echo base_url('orders/simpanPilihPembaca') ?>',
       type: 'POST',
       dataType: 'JSON',
       cache: false,
-      data:{id:id},
-      success: function(response) {
-        $('[name="id"]').val(response.data.id);
-        $('[name="idOrder"]').val(response.data.idOrder);
-        $('#modalRevisi').modal('show');
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        alert('something when wrong');
-      }
-    });
-  }
-
-  function getKota(id) {
-    $.ajax({
-      beforeSend: function() {
-        $('#searchKota').attr('disabled', true);
-        $('#searchKota').html('<i class="fa fa-spinner fa-spin">');
-      },
-      url: '<?= base_url('publics/getByIdKota') ?>',
-      type: "POST",
       data: {
-        id
+        id: id,
+        orderId: orderId,
+        idClient: idClient
       },
-      cache: false,
-      dataType: 'JSON',
       success: function(response) {
-        if (response.status == 'sukses') {
-          $('#kota_id').val(response.value.id);
-          $('#kota').val(response.value.name);
+        if (response.status == 200) {
+            setTimeout(() => {
+              dataTable.draw();
+            }, 500);
+          Swal.fire({
+            icon: 'success',
+            title: 'Notification',
+            text: response.message,
+
+          })
         } else {
-          alert(response.pesan);
+          Swal.fire({
+            icon: 'error',
+            title: 'Notification',
+            text: response.message,
+
+          })
         }
-        $('#searchKota').attr('disabled', false);
-        $('#searchKota').html('<i class="fa fa-search">');
-      },
-      error: function() {
-        alert("Something Went Wrong !");
-        $('#searchKota').attr('disabled', false);
-        $('#searchKota').html('<i class="fa fa-search">');
       }
     });
   }
