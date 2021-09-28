@@ -78,6 +78,7 @@ class Orders extends MY_Controller
       $button3 = "<a href=" . base_url('orders/proses/' . $rows->id) . " class='btn btn-danger btn-sm' style='color:white'>Proses </a>";
       // $button5 = "<a href=" . base_url('orders/complete/' . $rows->id) . " class='btn btn-success btn-sm' style='color:white'>Selesaikan Order </a>";
       $button4 = "<a href=" . base_url('orders/download_form_order/' . $rows->id) . " class='btn btn-success btn-sm' style='color:white'>Download </a>";
+      $button5 = "<a href=" . base_url('orders/revisi/' . $rows->id) . " class='btn btn-danger btn-sm' style='color:white'>Proses Revisi </a>";
       if ($_SESSION['level'] == "Admin") {
         $button = $button1 . " " . $button2;
       } else {
@@ -86,7 +87,7 @@ class Orders extends MY_Controller
         } elseif ($rows->status == 3) {
           $button = $button4;
         } elseif ($rows->status == 4) {
-          $button = $button4 . " " . $button4;
+          $button = $button5 . " " . $button4;
         }
       }
       $state = "";
@@ -341,6 +342,44 @@ class Orders extends MY_Controller
     }
   }
 
+  public function revisi($id)
+  {
+    $row = $this->Order_pembacaan_model->get_by_id($id);
+
+    if ($row) {
+      $data = array(
+        'button' => 'Read',
+        'mode' => 'update',
+        'action' => site_url('orders/save'),
+        'id' => set_value('id', $row->id),
+        'id_order' => set_value('id_order', $row->id_order),
+        'id_client' => set_value('id_client', $row->id_client),
+        'no_rekam_medis' => set_value('no_rekam_medis', $row->no_rekam_medis),
+        'dokter_pengirim' => set_value('dokter_pengirim', $row->dokter_pengirim),
+        'alamat' => set_value('alamat', $row->alamat),
+        'pemeriksaan' => set_value('pemeriksaan', $row->pemeriksaan),
+        'catatan' => set_value('catatan', $row->catatan_pemeriksaan),
+        'foto' => set_value('foto', $row->foto),
+        'indikasi_pemeriksaan' => set_value('indikasi_pemeriksaan', $row->indikasi_pemeriksaan),
+        'dokter_pemeriksa' => set_value('dokter_pemeriksa', $row->dokter_pemeriksa),
+        'created_at' => set_value('created_at', $row->created_at),
+        'id_pembaca' => set_value('id_pembaca', $row->id_pembaca),
+        'status' => set_value('status', $row->status),
+        'intra_oral' => set_value('intra_oral', $row->intra_oral),
+        'elemen_gigi' => set_value('elemen_gigi', $row->elemen_gigi),
+        'suspek' => set_value('suspek', $row->suspek),
+        'tarif' => set_value('tarif', $row->tarif),
+      );
+      $this->load->view('header');
+      $this->load->view('order_pembacaan/order_pembacaan_revisi', $data);
+      $this->load->view('footer');
+    } else {
+      $_SESSION['pesan'] = "Record Not Found";
+      $_SESSION['tipe'] = "error";
+      redirect(site_url('orders'));
+    }
+  }
+
   public function download_form_order($id)
   {
     $row = $this->Order_pembacaan_model->get_by_id($id);
@@ -352,7 +391,7 @@ class Orders extends MY_Controller
     $data = array(
       'button' => 'Read',
       'mode' => 'update',
-      'action' => site_url('order_pembacaan/update_action'),
+      'action' => site_url('orders/save'),
       'id' => set_value('id', $row->id),
       'id_order' => set_value('id_order', $row->id_order),
       'id_client' => set_value('id_client', $row->id_client),
@@ -426,6 +465,7 @@ class Orders extends MY_Controller
     $namaBank = $_SESSION['nama_bank'];
     $noRek = $_SESSION['no_rekening'];
     $atasNama = $_SESSION['atas_nama'];
+    $revisi = isset($_POST['revisi']) ? $_POST['revisi'] : "";
     foreach ($details as $dj) {
       $detail_pembacaan[] = [
         "id_order" =>  $idOrder,
@@ -436,16 +476,30 @@ class Orders extends MY_Controller
     $this->db->where('id_order', $idOrder);
     $this->db->delete('detail_pembacaan');
 
-    $data = array(
-      "tarif" => $hargaPembacaan,
-      "no_rekening" => $noRek,
-      "nama_bank" => $namaBank,
-      "atas_nama" => $atasNama,
-      "intra_oral" => $intraOral,
-      "elemen_gigi" => $elemenGigi,
-      "suspek" => $suspek,
-      "status" => 3
-    );
+    if ($revisi == "") {
+      $data = array(
+        "tarif" => $hargaPembacaan,
+        "no_rekening" => $noRek,
+        "nama_bank" => $namaBank,
+        "atas_nama" => $atasNama,
+        "intra_oral" => $intraOral,
+        "elemen_gigi" => $elemenGigi,
+        "suspek" => $suspek,
+        "status" => 3
+      );
+    } else {
+      $data = array(
+        "tarif" => $hargaPembacaan,
+        "no_rekening" => $noRek,
+        "nama_bank" => $namaBank,
+        "atas_nama" => $atasNama,
+        "intra_oral" => $intraOral,
+        "elemen_gigi" => $elemenGigi,
+        "suspek" => $suspek,
+        "status" => 3,
+        "status_revisi" => 1
+      );
+    }
     $this->db->where('id', $id);
     $update = $this->db->update('order_pembacaan', $data);
     $insert = $this->db->insert_batch('detail_pembacaan', $detail_pembacaan);
@@ -464,14 +518,25 @@ class Orders extends MY_Controller
       ];
     }
     date_default_timezone_set('Asia/Jakarta');
-    $message = array(
-      "pesan" => $_SESSION['nama'] . " sudah menyelesaikan pembacaan gambar.",
-      "status" => 0,
-      "created_at" => date('Y-m-d H:i:s'),
-      "deleted" => 0,
-      "link" => "order_pembacaan/view_hasil/" . $id,
-      "id_user" => $idClient,
-    );
+    if ($revisi == "") {
+      $message = array(
+        "pesan" => $_SESSION['nama'] . " sudah menyelesaikan pembacaan gambar.",
+        "status" => 0,
+        "created_at" => date('Y-m-d H:i:s'),
+        "deleted" => 0,
+        "link" => "order_pembacaan/view_hasil/" . $id,
+        "id_user" => $idClient,
+      );
+    } else {
+      $message = array(
+        "pesan" => $_SESSION['nama'] . " sudah menyelesaikan revisi pembacaan gambar.",
+        "status" => 0,
+        "created_at" => date('Y-m-d H:i:s'),
+        "deleted" => 0,
+        "link" => "order_pembacaan/view_hasil/" . $id,
+        "id_user" => $idClient,
+      );
+    }
 
     if ($update) {
       $this->db->insert('notifikasi', $message);

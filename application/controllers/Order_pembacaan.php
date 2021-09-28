@@ -472,6 +472,66 @@ class Order_pembacaan extends MY_Controller
         return $string;
     }
 
+
+    public function fetch_data_revisi()
+    {
+        $starts       = $this->input->post("start");
+        $length       = $this->input->post("length");
+        $LIMIT        = "LIMIT $starts, $length ";
+        $draw         = $this->input->post("draw");
+        $search       = $this->input->post("search")["value"];
+        $orders       = isset($_POST["order"]) ? $_POST["order"] : '';
+
+        $where = "WHERE 1=1 and b.id_client='{$_SESSION['id']}' ";
+        $where2 = "WHERE 1=1 and b.id_client='{$_SESSION['id']}' ";
+        $result = array();
+        if (isset($search)) {
+            if ($search != '') {
+                $where .= " AND (a.revisi LIKE '%$search%')";
+            }
+        }
+
+        if (isset($orders)) {
+            if ($orders != '') {
+                $order = $orders;
+                $order_column = ['a.revisi',];
+                $order_clm  = $order_column[$order[0]['column']];
+                $order_by   = $order[0]['dir'];
+                $where .= " ORDER BY $order_clm $order_by ";
+            } else {
+                $where .= " ORDER BY a.id ASC ";
+            }
+        } else {
+            $where .= " ORDER BY a.id ASC ";
+        }
+        if (isset($LIMIT)) {
+            if ($LIMIT != '') {
+                $where .= ' ' . $LIMIT;
+            }
+        }
+        $index = 1;
+        $button = "";
+        $fetch = $this->db->query("SELECT a.id_order,a.revisi,a.tanggal_revisi,b.id_client from revisi a join order_pembacaan b on a.id_order=b.id_order $where");
+        $fetch2 = $this->db->query("SELECT a.id_order,a.revisi,a.tanggal_revisi,b.id_client from revisi a join order_pembacaan b on a.id_order=b.id_order $where2");
+        foreach ($fetch->result() as $rows) {
+            $sub_array = array();
+            $sub_array[] = $index;
+            $sub_array[] = $rows->id_order;
+            $sub_array[] = $rows->revisi;
+            $sub_array[] = $rows->tanggal_revisi;
+            $result[]      = $sub_array;
+            $index++;
+        }
+        $output = array(
+            "draw"            =>     intval($this->input->post("draw")),
+            "recordsFiltered" =>     $fetch2->num_rows(),
+            "data"            =>     $result,
+
+        );
+        echo json_encode($output);
+    }
+
+
     public function save_revisi()
     {
         date_default_timezone_set('Asia/Jakarta');
@@ -493,7 +553,7 @@ class Order_pembacaan extends MY_Controller
             "status" => 0,
             "created_at" => date('Y-m-d H:i:s'),
             "deleted" => 0,
-            "link" => "#",
+            "link" => "panel",
             "id_user" => $row->id_pembaca,
         );
         if ($insert) {
@@ -511,6 +571,13 @@ class Order_pembacaan extends MY_Controller
                 "pesan" => "ERROR"
             ));
         }
+    }
+
+    public function order_revisi_pembacaan()
+    {
+        $this->load->view('client/header');
+        $this->load->view('order_pembacaan/order_revisi_list');
+        $this->load->view('client/footer');
     }
 
     public function upload_bukti()
@@ -752,7 +819,11 @@ class Order_pembacaan extends MY_Controller
             $this->Order_pembacaan_model->update($this->input->post('id', TRUE), $data);
             $_SESSION['pesan'] = "Update Record Success";
             $_SESSION['tipe'] = "success";
-            redirect(site_url('order_pembacaan'));
+            if ($_SESSION['level'] == "Client") {
+                redirect(site_url('order_pembacaan'));
+            } else {
+                redirect(site_url('orders'));
+            }
         }
     }
 

@@ -249,7 +249,7 @@
 						</a>
 						<ul class="submenu">
 							<li><a href="<?php echo base_url('order_pembacaan') ?>">Form Order Pembacaan Foto</a></li>
-							<li><a href="<?php echo base_url('order_revisi_pembacaan') ?>">Revisi Pembacaan Foto</a></li>
+							<li><a href="<?php echo base_url('order_pembacaan/order_revisi_pembacaan') ?>">Revisi Pembacaan Foto</a></li>
 						</ul>
 					</li>
 				</ul>

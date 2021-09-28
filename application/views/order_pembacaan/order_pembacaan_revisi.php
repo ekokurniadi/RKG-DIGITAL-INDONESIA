@@ -433,6 +433,36 @@
                             <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="jenis_kelamin" id="jenis_kelamin" placeholder="Dokter Pengirim" value="<?php echo $dt->alamat ?>" />
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <input <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-danger btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="Permintaan Revisi Client">
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-condensed">
+                                    <thead>
+                                        <tr style="background-color: #1b00ff;border-collapse:separate;color:white">
+                                            <th width="20px">No</th>
+                                            <th width="50px">Tanggal</th>
+                                            <th>Keterangan Revisi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(js, index) of revisi">
+                                            <td class="text-center">{{index+1}}</td>
+                                            <td>
+                                                {{formatDate(js.tanggal_revisi)}}
+                                            </td>
+                                            <td>{{js.revisi}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <input <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-info btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="Jenis Radiograf">
                     </div>
@@ -452,6 +482,7 @@
                         <input <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-info btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="Interpretasi">
                     </div>
                     <?php $detail = $this->db->get_where('detail_pembacaan', array('id_order' => $id_order))->result() ?>
+                    <?php $revisi = $this->db->get_where('revisi', array('id_order' => $id_order))->result() ?>
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <div class="table-responsive">
@@ -516,7 +547,7 @@
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Harga Pembacaan <?php echo form_error('dokter_pengirim') ?></label>
                         <div class="col-sm-12 col-md-10">
-                            <select name="harga_pembacaan" <?= $level == "Client" ? "readonly" : "" ?> id="harga_pembacaan" class="form-control">
+                            <select name="harga_pembacaan" readonly <?= $level == "Client" ? "readonly" : "" ?> id="harga_pembacaan" class="form-control">
                                 <option value="<?= $tarif ?>"><?= $tarif == 0 ? "Choose an option" : number_format($tarif, 0, ',', '.') ?></option>
                                 <?php foreach ($this->db->get_where('master_harga_pembaca', array('id_pembaca' => $_SESSION['id']))->result() as $rows) : ?>
                                     <option value="<?= $rows->harga ?>"><?= number_format($rows->harga, 0, ',', '.') ?></option>
@@ -525,7 +556,9 @@
                         </div>
                     </div>
                     <input type="hidden" name="id" id="id" value="<?php echo $id; ?>" />
+                    <input type="hidden" name="revisi" id="revisi" value="revisi" />
                     <input type="hidden" name="id_client" id="id_client" value="<?php echo $id_client; ?>" />
+
                 </form>
 
                 <div class="text-left">
@@ -533,10 +566,10 @@
                         <button type="submit" id="btnSubmit" class="btn btn-primary"><span class="fa fa-edit"></span><?php echo $button ?></button>
                     <?php endif; ?>
                     <?php if ($level == "Pembaca Gambar") { ?>
-                        <button type="submit" id="btnSave" class="btn btn-icon icon-left btn-primary">Simpan Form Pembacaan</button>
-                        <a href="<?php echo site_url('order') ?>" class="btn btn-icon icon-left btn-danger">Cancel</a>
+                        <button type="submit" id="btnSave" class="btn btn-icon icon-left btn-primary">Simpan Form Revisi Pembacaan</button>
+                        <a href="<?php echo site_url('orders') ?>" class="btn btn-icon icon-left btn-danger">Cancel</a>
                     <?php } else { ?>
-                        <a href="<?php echo site_url('order_pembacaan') ?>" class="btn btn-icon icon-left btn-danger">Cancel</a>
+                        <a href="<?php echo site_url('orders') ?>" class="btn btn-icon icon-left btn-danger">Cancel</a>
                     <?php } ?>
                     <!-- </form> -->
                 </div>
@@ -554,6 +587,7 @@
                     keterangan: '',
                 },
                 details: <?= isset($detail) ? json_encode($detail) : '[]' ?>,
+                revisi: <?= isset($revisi) ? json_encode($revisi) : '[]' ?>,
             },
             methods: {
                 clearDetail: function() {
@@ -571,6 +605,9 @@
                 delDetails: function(index) {
                     this.details.splice(index, 1);
                 },
+                formatDate(date) {
+                    return moment(date).format('DD/MM/YYYY');
+                }
             }
         });
     </script>
