@@ -509,9 +509,9 @@
                     <?php if ($button != "Read") : ?>
                         <button type="submit" id="btnSubmit" class="btn btn-primary"><span class="fa fa-edit"></span><?php echo $button ?></button>
                     <?php endif; ?>
-                    <?php if ($level == "Pembaca Gambar") { ?>
+                    <?php if ($level == "Pembaca Gambar" || $level=="Admin") { ?>
                         <!-- <button type="submit" id="btnSave" class="btn btn-icon icon-left btn-primary">Simpan Form Pembacaan</button> -->
-                        <a href="<?php echo site_url('orders/history') ?>" class="btn btn-icon icon-left btn-danger">Cancel</a>
+                        <a href="<?php echo site_url('orders') ?>" class="btn btn-icon icon-left btn-danger">Cancel</a>
                     <?php } else { ?>
                         <a href="<?php echo site_url('order_pembacaan') ?>" class="btn btn-icon icon-left btn-danger">Cancel</a>
                     <?php } ?>

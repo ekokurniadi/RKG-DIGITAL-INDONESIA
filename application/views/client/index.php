@@ -9,8 +9,8 @@
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">75</div>
-                            <div class="font-14 text-secondary weight-500">Appointment</div>
+                            <div class="weight-700 font-24 text-dark"><?=$this->db->get_where('order_pembacaan',array('id_client'=>$_SESSION['id'],'status'=>6))->num_rows()?></div>
+                            <div class="font-14 text-secondary weight-500">Selesai</div>
                         </div>
                         <div class="widget-icon">
                             <div class="icon" data-color="#00eccf"><i class="icon-copy dw dw-calendar1"></i></div>
@@ -22,8 +22,8 @@
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">124,551</div>
-                            <div class="font-14 text-secondary weight-500">Total Patient</div>
+                            <div class="weight-700 font-24 text-dark"><?=$this->db->get_where('order_pembacaan',array('id_client'=>$_SESSION['id'],'status'=>4))->num_rows()?></div>
+                            <div class="font-14 text-secondary weight-500">Revisi</div>
                         </div>
                         <div class="widget-icon">
                             <div class="icon" data-color="#ff5b5b"><span class="icon-copy ti-heart"></span></div>
@@ -35,8 +35,8 @@
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">400+</div>
-                            <div class="font-14 text-secondary weight-500">Total Doctor</div>
+                            <div class="weight-700 font-24 text-dark"><?=$this->db->get_where('order_pembacaan',array('id_client'=>$_SESSION['id'],'status'=>0))->num_rows()?></div>
+                            <div class="font-14 text-secondary weight-500">Menunggu Konfirmasi</div>
                         </div>
                         <div class="widget-icon">
                             <div class="icon"><i class="icon-copy fa fa-stethoscope" aria-hidden="true"></i></div>
@@ -48,8 +48,8 @@
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">$50,000</div>
-                            <div class="font-14 text-secondary weight-500">Earning</div>
+                            <div class="weight-700 font-24 text-dark"><?=$this->db->get_where('order_pembacaan',array('id_client'=>$_SESSION['id'],'status_pembayaran'=>0))->num_rows()?></div>
+                            <div class="font-14 text-secondary weight-500">Belum Dibayar</div>
                         </div>
                         <div class="widget-icon">
                             <div class="icon" data-color="#09cc06"><i class="icon-copy fa fa-money" aria-hidden="true"></i></div>
