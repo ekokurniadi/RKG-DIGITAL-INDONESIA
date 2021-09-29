@@ -9,7 +9,7 @@
 						</div>
 						<nav aria-label="breadcrumb" role="navigation">
 							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="<?php echo base_url(); ?>dashboard">Home</a></li>
+								<li class="breadcrumb-item"><a href="<?php echo base_url(); ?>panel">Home</a></li>
 								<li class="breadcrumb-item active" aria-current="page">Master harga pembaca</li>
 							</ol>
 						</nav>
@@ -20,7 +20,7 @@
 			<div class="card-box mb-30">
 				<div class="pd-20">
 					<h4 class="text-dark h4"><i class="icon-copy dw dw-newspaper"></i> Master harga pembaca</h4>
-					<?php echo anchor(site_url('master_harga_pembaca/create'), '<i class="icon-copy dw dw-add-file-1"></i> Add New', 'class="btn btn-primary"'); ?>
+					<!-- <?php echo anchor(site_url('master_harga_pembaca/create'), '<i class="icon-copy dw dw-add-file-1"></i> Add New', 'class="btn btn-primary"'); ?> -->
 				</div>
 				<div class="pb-20">
 					<div class="table-responsive">
@@ -28,8 +28,8 @@
 							<thead>
 								<tr>
 									<th>No</th>
-									<th>Kode Harga</th>
-									<th>Harga</th>
+									<th>SIP</th>
+									<th>Nama</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -51,7 +51,7 @@
 										[10, 25, 50, 75, 100]
 									],
 									"ajax": {
-										url: "<?php echo site_url('master_harga_pembaca/fetch_data'); ?>",
+										url: "<?php echo site_url('master_harga/fetch_data'); ?>",
 										type: "POST",
 										dataSrc: "data",
 										data: function(d) {
