@@ -550,7 +550,7 @@ p {
 }
 
 .text-blue {
-    color: #1b00ff
+    color: #1b3133
 }
 
 .text-light-blue {
@@ -991,7 +991,7 @@ textarea.form-control {
 }
 
 .breadcrumb-item.active {
-    color: #1b00ff;
+    color: #031e23;
     font-weight: 500
 }
 

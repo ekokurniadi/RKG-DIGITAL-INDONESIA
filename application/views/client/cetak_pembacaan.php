@@ -41,13 +41,13 @@
 	</style>
 	<style>
 		@media print {
-			@page {
+			/* @page {
 				sheet-size: 330mm 210mm;
 				margin-left: 0.8cm;
 				margin-right: 0.8cm;
 				margin-bottom: 1cm;
 				margin-top: 1cm;
-			}
+			} */
 
 			.text-center {
 				text-align: center;
@@ -79,32 +79,12 @@
 </head>
 
 <body>
-	<table class="headers">
+	<table width="100%" style="margin-top:-10;margin-left:-10px">
 		<tr>
-			<th rowspan="4">
-				<img src="<?= base_url() ?>uploads/rsgm.png" alt="" width="120px" style="vertical-align:top;">
-			</th>
-			<th>
-				<h3>INSTALASI RADIOLOGI KEDOKTERAN GIGI</h3>
-			</th>
-		</tr>
-		<tr>
-			<th>
-				<h3>RUMAH SAKIT GIGI DAN MULUT (RSGM)</h3>
-			</th>
-		</tr>
-		<tr>
-			<th>
-				<h3>FAKULTAS KEDOKTERAN GIGI UNIVERSITAS PADJAJARAN</h3>
-			</th>
-		</tr>
-		<tr>
-			<th>
-				<h6>Jl. Sekeloa Selatan No. 1 Bandung Telp/Fax. 022 2532683</h6>
-			</th>
+			<th style="background-image: url('<?= base_url() ?>uploads/shape.PNG');width:100%;height:250px; fit-content:fill;position:absolute;top:0;left:0; background-position: top center;background-repeat:no-repeat"></th>
 		</tr>
 	</table>
-	<div style="margin-top: 40px;margin-left:auto;margin-right:auto;width:100%;background-color:dimgray;padding:5px 0px 5px auto;text-align:center;color:white;font-weight:bold">
+	<div style="margin-top: -30px;margin-left:auto;margin-right:auto;width:90%;background-color:dimgray;padding:5px 0px 5px auto;text-align:center;color:white;font-weight:bold">
 		LEMBAR INTERPRETASI HASIL FOTO RONTGEN
 	</div>
 	<table class="data" style="width: 70% !important;">
@@ -158,7 +138,7 @@
 				<p>:</p>
 			</th>
 			<th width="250px" style="text-align: left;">
-				<p><?= $nama ?></p>
+				<p><?= $nama_pasien ?></p>
 			</th>
 			<th width="20px"></th>
 			<th width="100px">
@@ -168,7 +148,7 @@
 				<p>:</p>
 			</th>
 			<th width="200px" style="text-align: left;">
-				<p><?= $jk ?></p>
+				<p><?= $jenis_kelamin ?></p>
 			</th>
 		</tr>
 		<tr>
@@ -189,15 +169,15 @@
 				<p>:</p>
 			</th>
 			<th width="200px" style="text-align: left;">
-				<p><?= $alamat ?></p>
+				<p><?= $alamat_pasien ?></p>
 			</th>
 		</tr>
 	</table>
-	<div style="margin-top: 10px;margin-left:auto;margin-right:auto;width:100%;background-color:black;padding:2px 0px 2px auto;text-align:center;color:white;font-weight:bold">
+	<div style="margin-top: 10px;margin-left:auto;margin-right:auto;width:90%;background-color:black;padding:2px 0px 2px auto;text-align:center;color:white;font-weight:bold">
 
 	</div>
 	<br>
-	<table class="radiograf">
+	<table class="radiograf" style="margin-left:40px">
 		<tr>
 			<th colspan="2" style="text-align: left;">
 				<p>Jenis Radiograf :</p>
@@ -223,7 +203,7 @@
 	</table>
 
 	<br>
-	<table class="table table-bordered" border=1>
+	<table class="table table-bordered" border="1" width="100%" style="margin-left:40px;margin-right:40px">
 		<?php foreach ($this->db->get_where('detail_pembacaan', array('id_order' => $id_order))->result() as $rows) : ?>
 			<tr>
 				<td width="30%">
@@ -237,10 +217,10 @@
 	</table>
 
 	<br>
-	<table class="radiograf">
+	<table class="radiograf" style="margin-left:40px;margin-right:40px">
 		<tr>
 			<th style="text-align: left;">
-				<p>Suspek Radiodiagnosis</p>
+				<p>Radiodiagnosis Umum</p>
 			</th>
 			<th style="text-align: left;" width="200px">: <?= $suspek ?></th>
 		</tr>
@@ -248,7 +228,7 @@
 	<br>
 	<br>
 
-	<table class="radiograf" >
+	<table class="radiograf" width="100%"  style="margin-left:40px;margin-right:40px">
 		<tr>
 			<th colspan="2" style="text-align: left;">
 				<p>Terima kasih atas kepercayaan sejawat.</p>
@@ -259,13 +239,18 @@
 		</tr>
 		<tr>
 			<th colspan="2">
-					<br><br><br><br><br><br>
+				<br><br><br><br><br><br>
 			</th>
 		</tr>
 		<tr>
 			<th colspan="2">
 				<p><?= $pembaca_nama ?></p>
 			</th>
+		</tr>
+	</table>
+	<table width="100%" style="position:absolute;bottom:0;margin-top:100px">
+		<tr>
+			<th style="background-image: url('<?= base_url() ?>uploads/shape-2.PNG');width:100%;height:300px; fit-content:cover;position:absolute;top:0;bottom:0;left:0; background-position: bottom center;background-repeat:no-repeat;"></th>
 		</tr>
 	</table>
 </body>

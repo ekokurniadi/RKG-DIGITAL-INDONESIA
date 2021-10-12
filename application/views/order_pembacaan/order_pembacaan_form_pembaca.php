@@ -87,7 +87,7 @@
 
 
                 <div class="form-group row">
-                    <input <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-success btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="PEMERIKSAAN">
+                    <input style="background-color:#a14247" <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-success btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="PEMERIKSAAN">
                 </div>
 
                 <div class="form-group row">
@@ -195,7 +195,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <input <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-success btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="REGIO">
+                    <input style="background-color:#a14247" <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-success btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="REGIO">
                 </div>
                 <div class="form-group row">
                     <div class="col-md-12">
@@ -253,7 +253,7 @@
                                         $cekKiriAtas = $this->db->get_where('detail_regio_angka', array('id_order' => $id_order));
                                         if ($cekKiriAtas->num_rows() > 0) {
                                             foreach ($cekKiriAtas->result() as $rows) {
-                                                if ($rows->angka == $ka->id && $rows->lokasi == 3) {
+                                                if ($rows->angka == $ka->id && $rows->lokasi == 4) {
                                                     $state = 'checked';
                                                 }
                                             }
@@ -272,7 +272,7 @@
                                         $cekKiriAtas = $this->db->get_where('detail_regio_angka', array('id_order' => $id_order));
                                         if ($cekKiriAtas->num_rows() > 0) {
                                             foreach ($cekKiriAtas->result() as $rows) {
-                                                if ($rows->angka == $kn->id && $rows->lokasi == 4) {
+                                                if ($rows->angka == $kn->id && $rows->lokasi == 3) {
                                                     $state = 'checked';
                                                 }
                                             }
@@ -348,7 +348,7 @@
                                         $cekKiriAtas = $this->db->get_where('detail_regio_angka', array('id_order' => $id_order));
                                         if ($cekKiriAtas->num_rows() > 0) {
                                             foreach ($cekKiriAtas->result() as $rows) {
-                                                if ($rows->angka == $ka->id && $rows->lokasi == 7) {
+                                                if ($rows->angka == $ka->id && $rows->lokasi == 8) {
                                                     $state = 'checked';
                                                 }
                                             }
@@ -367,7 +367,7 @@
                                         $cekKiriAtas = $this->db->get_where('detail_regio_angka', array('id_order' => $id_order));
                                         if ($cekKiriAtas->num_rows() > 0) {
                                             foreach ($cekKiriAtas->result() as $rows) {
-                                                if ($rows->angka == $kn->id && $rows->lokasi == 8) {
+                                                if ($rows->angka == $kn->id && $rows->lokasi == 7) {
                                                     $state = 'checked';
                                                 }
                                             }
@@ -397,46 +397,41 @@
                         <textarea readonly class="form-control" rows="3" name="indikasi_pemeriksaan" id="indikasi_pemeriksaan" placeholder="Indikasi Pemeriksaan"><?php echo $indikasi_pemeriksaan; ?></textarea>
                     </div>
                 </div>
+				<?php $level = $_SESSION['level']?>
 
                 <div class="form-group row">
-                    <input <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-info btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="Form Pembacaan">
+                    <input style="background-color:#a14247" <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-info btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="Form Pembacaan">
                 </div>
                 <form method="POST" id="form_" enctype="multipart/form-data">
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Nama Pasien <?php echo form_error('dokter_pengirim') ?></label>
                         <div class="col-sm-12 col-md-10">
-                            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="nama_pasien" id="nama_pasien" placeholder="Dokter Pengirim" value="<?php echo $this->db->get_where('users', array('id' => $id_client))->row()->nama; ?>" />
+                            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="nama_pasien" id="nama_pasien" placeholder="Nama Pasien" value="<?php echo $nama_pasien; ?>" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Umur <?php echo form_error('dokter_pengirim') ?></label>
-                        <?php
-                        $level = $_SESSION['level'];
-                        date_default_timezone_set('Asia/Jakarta');
-                        $dt = $this->db->get_where('users', array('id' => $id_client))->row();
-                        $date = new DateTime('today');
-                        $tgl_lahir = new DateTime($dt->tanggal_lahir);
-                        $umur = $date->diff($tgl_lahir)->y; ?>
+                        
                         <div class="col-sm-12 col-md-10">
-                            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="umur" id="umur" placeholder="Dokter Pengirim" value="<?php echo $umur ?> Tahun" />
+                            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="umur" id="umur" placeholder="Umur" value="<?php echo $umur ?> Tahun" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Jenis Kelamin <?php echo form_error('dokter_pengirim') ?></label>
                         <div class="col-sm-12 col-md-10">
-                            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="jenis_kelamin" id="jenis_kelamin" placeholder="Dokter Pengirim" value="<?php echo $dt->jenis_kelamin ?>" />
+                            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="jenis_kelamin" id="jenis_kelamin" placeholder="Jenis Kelamin" value="<?php echo $jenis_kelamin ?>" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Alamat <?php echo form_error('dokter_pengirim') ?></label>
                         <div class="col-sm-12 col-md-10">
-                            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="jenis_kelamin" id="jenis_kelamin" placeholder="Dokter Pengirim" value="<?php echo $dt->alamat ?>" />
+                            <input <?= $button == 'Read' ? 'readonly' : "" ?> type="text" class="form-control" name="jenis_kelamin" id="jenis_kelamin" placeholder="Alamat pasien" value="<?php echo $alamat_pasien ?>" />
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <!-- <div class="form-group row">
                         <input <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-info btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="Jenis Radiograf">
-                    </div>
-                    <div class="form-group row">
+                    </div> -->
+                    <!-- <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Intra Oral <?php echo form_error('dokter_pengirim') ?></label>
                         <div class="col-sm-12 col-md-10">
                             <input type="text" class="form-control" <?= $level == "Client" ? "readonly" : "" ?> required name="intra_oral" id="intra_oral" placeholder="Intra Oral" value="<?php echo $intra_oral ?>" />
@@ -447,11 +442,12 @@
                         <div class="col-sm-12 col-md-10">
                             <input type="text" class="form-control" <?= $level == "Client" ? "readonly" : "" ?> required name="elemen_gigi" id="elemen_gigi" placeholder="Elemen gigi" value="<?php echo $elemen_gigi ?>" />
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-group row">
-                        <input <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-info btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="Interpretasi">
+                        <input style="background-color:#a14247" <?= $button == 'Read' ? 'readonly' : "" ?> type="button" class="btn btn-info btn-block col-sm-12 col-md-12 col-form-label" style="text-align:left" value="Interpretasi">
                     </div>
-                    <?php $detail = $this->db->get_where('detail_pembacaan', array('id_order' => $id_order))->result() ?>
+                    <?php $detail = 
+					$this->db->order_by('lokasi','ASC')->get_where('detail_regio_angka', array('id_order' => $id_order))->result() ?>
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <div class="table-responsive">
@@ -461,15 +457,19 @@
                                             <th width="20px">No</th>
                                             <th>Elemen</th>
                                             <th>Keterangan</th>
+                                            <th>Radiodiagnosis Khusus</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="(js, index) of details">
                                             <td class="text-center">{{index+1}}</td>
-                                            <td>{{js.elemen}}</td>
+                                            <td>{{js.lokasi}}{{js.angka}}</td>
                                             <td>
-                                                {{js.keterangan}}
+                                               <input type="text" class="form-control" name="keterangannya" id="keterangannya" v-model="js.keterangan">
+                                            </td>
+                                            <td>
+                                               <input type="text" class="form-control" name="radiodiagnosis_khusus" id="radiodiagnosis_khusus" v-model="js.radiodiagnosis_khusus">
                                             </td>
 
                                             <td align="center" v-if="mode=='update'|| mode=='create'">
@@ -484,15 +484,35 @@
                                     if ($_SESSION['level'] != "Client") { ?>
                                         <tfoot>
                                             <tr>
-
                                                 <td colspan="4">
-                                                    <input class="form-control isi" placeholder="Elemen" v-model="detail.elemen" />
+                                                    <input class="form-control isi" placeholder="Gigi" v-model="detail.angka" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4">
+                                                    <select class="form-control isi" v-model="detail.lokasi">
+														<option value="">Pilih Lokasi Gigi</option>
+														<option value="1">1</option>
+														<option value="2">2</option>
+														<option value="3">3</option>
+														<option value="4">4</option>
+														<option value="5">5</option>
+														<option value="6">6</option>
+														<option value="7">7</option>
+														<option value="8">8</option>
+													</select>
                                                 </td>
                                             </tr>
                                             <tr>
 
                                                 <td colspan="4">
                                                     <input class="form-control isi" placeholder="Keterangan" v-model="detail.keterangan" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td colspan="4">
+                                                    <input class="form-control isi" placeholder="Radiodiagnosis Khusus" v-model="detail.radiodiagnosis_khusus" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -508,20 +528,21 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-12 col-md-2 col-form-label">Suspek Radiodiagnosis <?php echo form_error('dokter_pengirim') ?></label>
+                        <label class="col-sm-12 col-md-2 col-form-label">Radiodiagnosis Umum<?php echo form_error('dokter_pengirim') ?></label>
                         <div class="col-sm-12 col-md-10">
-                            <input type="text" class="form-control" <?= $level == "Client" ? "readonly" : "" ?> name="suspek" id="suspek" required placeholder="Suspek Radiodiagnosis" value="<?php echo $suspek ?>" />
+                            <input type="text" class="form-control" <?= $level == "Client" ? "readonly" : "" ?> name="suspek" id="suspek" required placeholder="Radiodiagnosis Umum" value="<?php echo $suspek ?>" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Harga Pembacaan <?php echo form_error('dokter_pengirim') ?></label>
                         <div class="col-sm-12 col-md-10">
-                            <select name="harga_pembacaan" <?= $level == "Client" ? "readonly" : "" ?> id="harga_pembacaan" class="form-control">
-                                <option value="<?= $tarif ?>"><?= $tarif == 0 ? "Choose an option" : number_format($tarif, 0, ',', '.') ?></option>
-                                <?php foreach ($this->db->get_where('master_harga_pembaca', array('id_pembaca' => $_SESSION['id']))->result() as $rows) : ?>
-                                    <option value="<?= $rows->harga ?>"><?= number_format($rows->harga, 0, ',', '.') ?></option>
-                                <?php endforeach; ?>
-                            </select>
+						<input type="text" class="form-control" <?= $level == "Client"  || $level == "Pembaca Gambar" ? "readonly" : "" ?> name="harga_pembacaan" id="harga_pembacaan" required placeholder="Tarif pembacaan" value="<?php echo $tarif ?>" />
+                        </div>
+                    </div>
+					<div class="form-group row">
+                        <label class="col-sm-12 col-md-2 col-form-label">Harga Tambahan<?php echo form_error('dokter_pengirim') ?></label>
+                        <div class="col-sm-12 col-md-10">
+                            <input type="text" class="form-control" <?= $level == "Client" ? "readonly" : "" ?> name="harga_tambahan" id="harga_tambahan" required placeholder="Harga tambahan" value="<?php echo $harga_tambahan ?>" />
                         </div>
                     </div>
                     <input type="hidden" name="id" id="id" value="<?php echo $id; ?>" />
@@ -534,7 +555,7 @@
                     <?php endif; ?>
                     <?php if ($level == "Pembaca Gambar") { ?>
                         <button type="submit" id="btnSave" class="btn btn-icon icon-left btn-primary">Simpan Form Pembacaan</button>
-                        <a href="<?php echo site_url('order') ?>" class="btn btn-icon icon-left btn-danger">Cancel</a>
+                        <a href="<?php echo site_url('orders') ?>" class="btn btn-icon icon-left btn-danger">Cancel</a>
                     <?php } else { ?>
                         <a href="<?php echo site_url('order_pembacaan') ?>" class="btn btn-icon icon-left btn-danger">Cancel</a>
                     <?php } ?>
@@ -550,8 +571,10 @@
             data: {
                 mode: '<?= $mode ?>',
                 detail: {
-                    elemen: '',
+                    angka: '',
+                    lokasi: '',
                     keterangan: '',
+					radiodiagnosis_khusus:''
                 },
                 details: <?= isset($detail) ? json_encode($detail) : '[]' ?>,
             },
@@ -560,7 +583,7 @@
                     this.detail = {}
                 },
                 addDetail: function() {
-                    if (this.detail.elemen === '' || this.detail.keterangan === '') {
+                    if (this.detail.angka === '' || this.detail.lokasi === '') {
                         alert('mohon isi elemen dan keterangan dengan lengkap');
                         return false;
                     } else {
@@ -609,7 +632,7 @@
             }
 
             if (form.valid()) {
-
+				console.log(values)
                 $.ajax({
                     beforeSend: function() {
                         $('#btnSave').attr('disabled', true);

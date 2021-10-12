@@ -19,7 +19,7 @@
 			margin-right: auto;
 			width: 90%;
 			height: 10px;
-			background-color: green;
+			background-color: #737373;
 			border-radius: 30px;
 			padding: 3px 3px 3px 8px;
 			font-size: 9pt;
@@ -31,7 +31,7 @@
 		div.box3 {
 			width: 30%;
 			height: 100px;
-			border: 1px solid green;
+			border: 1px solid #737373;
 			border-radius: 10px;
 			margin-left: 30px;
 			margin-top: 10px;
@@ -43,7 +43,7 @@
 			margin-right: auto;
 			width: 30%;
 			height: 10px;
-			background-color: green;
+			background-color: #737373;
 			border-radius: 30px;
 			padding: 3px 3px 3px 8px;
 			font-size: 9pt;
@@ -63,7 +63,7 @@
 		}
 
 		table.table-pemeriksaan tr td#box-radius {
-			border: 1px solid green;
+			border: 1px solid #737373;
 			border-radius: 30px;
 			/* padding: 180px; */
 			vertical-align: text-top;
@@ -87,10 +87,10 @@
 
 	<table width="100%">
 		<tr>
-			<th style="background-image: url('<?= base_url() ?>uploads/shape.jpeg');width:100%;height:250px; fit-content:fill;position:absolute;top:0;left:0; background-position: top center;background-repeat:no-repeat"></th>
+			<th style="background-image: url('<?= base_url() ?>uploads/shape.PNG');width:100%;height:250px; fit-content:fill;position:absolute;top:0;left:0; background-position: top center;background-repeat:no-repeat"></th>
 		</tr>
 	</table>
-	<table style="margin-top: -90px;width:95%">
+	<!-- <table style="margin-top: -90px;width:95%">
 		<tr>
 			<th>
 				<img src="<?= base_url() ?>uploads/unimus.png" alt="" width="200px" style="vertical-align:top;margin-top:-50px">
@@ -115,8 +115,8 @@
 				</p>
 			</th>
 		</tr>
-	</table>
-	<hr style="margin-top: -50px;color:green;height:2px;margin-left:30px;margin-right:30px">
+	</table> -->
+	<hr style="margin-top: -40px;color:black;height:2px;margin-left:30px;margin-right:30px;width:90%" >
 	<table style="margin-top: -50px;margin-right:50;margin-left:50">
 
 		<tr>
@@ -126,16 +126,16 @@
 			<td width="5%">
 				:
 			</td>
-			<td width="50%"><?= $nama ?></td>
-			<td rowspan="5" width="0.2px" style="background-color: green;text-align:center;margin-left:-50px important"></td>
+			<td width="50%"><?= $nama_pasien ?></td>
+			<td rowspan="5" width="0.2px" style="background-color: #737373;text-align:center;margin-left:-50px important"></td>
 			<td rowspan="5"></td>
-			<td width="25%" style="background-color:green;color:white;border-top-left-radius: 50% !important;">
+			<td width="25%" style="background-color:#737373;color:white;border-top-left-radius: 50% !important;">
 				No. RM*
 			</td>
-			<td width="5%" style="background-color:green;color:white;">
+			<td width="5%" style="background-color:#737373;color:white;">
 				:
 			</td>
-			<td width="40%" style="border:1px solid green">
+			<td width="40%" style="border:1px solid #737373">
 				<?= $no_rekam_medis ?>
 			</td>
 		</tr>
@@ -146,7 +146,7 @@
 			<td width="5%">
 				:
 			</td>
-			<td width="40%"><?= $tempat ?>, <?= tgl_indo($tanggal) ?></td>
+			<td width="40%"><?=$tempat_lahir?>, <?= tgl_indo($tanggal_lahir_pasien) ?></td>
 			<td width="25%">
 				Dokter Pengirim
 			</td>
@@ -178,7 +178,7 @@
 			<td width="5%">
 				:
 			</td>
-			<td width="40%"><?= $jk ?></td>
+			<td width="40%"><?= $jenis_kelamin ?></td>
 			<td width="25%">
 				Telepon
 			</td>
@@ -191,7 +191,7 @@
 			<td colspan="8">&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="8" width="0.2pt" style="background-color: green;text-align:center;margin-left:-50px important"></td>
+			<td colspan="8" width="0.2pt" style="background-color: #737373;text-align:center;margin-left:-50px important"></td>
 		</tr>
 	</table>
 	<p style="margin-left:40px;font-size:9pt">Teman sejawat Yth. </p>
@@ -323,13 +323,13 @@
 								}
 							}
 							?>
-							<td style="border-bottom: 2px solid green;">
+							<td style="border-bottom: 2px solid #737373;">
 								<?php echo $ka->angka ?>
 								<?=$state?>
 							</td>
 						<?php endforeach; ?>
 						<td width="20px" rowspan="2" align="center">
-							<div style="background-color: green;width:2px">&nbsp;</div>
+							<div style="background-color: #737373;width:2px">&nbsp;</div>
 						</td>
 						<?php
 						$kanan = $this->db->query("SELECT * from regio_kanan_atas order by id ASC")->result() ?>
@@ -346,7 +346,7 @@
 								}
 							}
 							?>
-							<td style="border-bottom: 2px solid green;">
+							<td style="border-bottom: 2px solid #737373;">
 								<?php echo $kn->angka ?>
 								<?=$state?>
 							</td>
@@ -419,13 +419,13 @@
 								}
 							}
 							?>
-							<td style="border-bottom: 2px solid green;">
+							<td style="border-bottom: 2px solid #737373;">
 								<?php echo $ka->angka ?>
 								<?=$state?>
 							</td>
 						<?php endforeach; ?>
 						<td width="20px" rowspan="2" align="center">
-							<div style="background-color: green;width:2px">&nbsp;</div>
+							<div style="background-color: #737373;width:2px">&nbsp;</div>
 						</td>
 						<?php
 						$kanan = $this->db->query("SELECT * from regio_romawi_kanan_atas order by id ASC")->result() ?>
@@ -441,7 +441,7 @@
 								}
 							}
 							?>
-							<td style="border-bottom: 2px solid green;">
+							<td style="border-bottom: 2px solid #737373;">
 								<?php echo $kn->angka ?>
 								<?=$state?>
 							</td>
@@ -515,9 +515,9 @@
 			</div>
 		</div>
 	</div>
-	<table width="100%" style="position:absolute;bottom:0;margin-top:0px">
+	<table width="100%" style="position:absolute;bottom:0;margin-top:10px">
 		<tr>
-			<th style="background-image: url('<?= base_url() ?>uploads/shape-flip.jpeg');width:100%;height:180px; fit-content:cover;position:absolute;top:0;bottom:0;left:0; background-position: bottom center;background-repeat:no-repeat;"></th>
+			<th style="background-image: url('<?= base_url() ?>uploads/shape-2.PNG');width:100%;height:300px; fit-content:cover;position:absolute;top:0;bottom:0;left:0; background-position: bottom center;background-repeat:no-repeat;"></th>
 		</tr>
 	</table>
 </body>

@@ -32,8 +32,8 @@
                 <ul>
                     <li class="clearfix">
                         <div class="invoice-sub">Pembacaan Radiologi</div>
-                        <div class="invoice-rate">Rp.<?php echo number_format($tarif,0,',','.') ?></div>
-                        <div class="invoice-subtotal"><span class="weight-600">Rp.<?php echo number_format($tarif,0,',','.') ?></span></div>
+                        <div class="invoice-rate">Rp.<?php echo number_format($tarif+$harga_tambahan,0,',','.') ?></div>
+                        <div class="invoice-subtotal"><span class="weight-600">Rp.<?php echo number_format($tarif+$harga_tambahan,0,',','.') ?></span></div>
                     </li>
 
                 </ul>
@@ -52,7 +52,7 @@
                                 <p class="font-14 mb-5">Atas Nama: <strong class="weight-600"><?= $atas_nama ?></strong></p>
                             </div>
 
-                            <div class="invoice-subtotal"><span class="weight-600 font-24 text-danger">Rp.<?php echo number_format($tarif,0,',','.') ?></span></div>
+                            <div class="invoice-subtotal"><span class="weight-600 font-24 text-danger">Rp.<?php echo number_format($tarif+$harga_tambahan	,0,',','.') ?></span></div>
                         </li>
                     </ul>
                 </div>

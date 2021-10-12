@@ -80,7 +80,7 @@ class Orders extends MY_Controller
 			$button4 = "<a href=" . base_url('orders/download_form_order/' . $rows->id) . " class='btn btn-success btn-sm' style='color:white'>Download </a>";
 			$button5 = "<a href=" . base_url('orders/revisi/' . $rows->id) . " class='btn btn-danger btn-sm' style='color:white'>Proses Revisi </a>";
 			if ($_SESSION['level'] == "Admin") {
-				$button = $button1 . " " . $button2;
+				$button = $button1;
 			} else {
 				if ($rows->status == 1) {
 					$button = $button3 . " " . $button4;
@@ -232,6 +232,32 @@ class Orders extends MY_Controller
 		echo json_encode($output);
 	}
 
+	public function simpan_data()
+	{
+		$id = $this->input->post('id');
+		$id_pembaca = $this->input->post('id_pembaca');
+		$tarif = $this->input->post('tarif');
+		$this->db->where('id', $id);
+		$update = $this->db->update('order_pembacaan', array('status' => 1, 'id_pembaca' => $id_pembaca, 'tarif' => $tarif));
+		if ($update) {
+			$_SESSION['pesan'] = "Success mengirimkan order";
+			$_SESSION['tipe'] = "success";
+			echo json_encode(array(
+				"status" => 200,
+				"link" => base_url('orders'),
+				"message" => "Order berhasil di teruskan ke pembaca gambar"
+			));
+		} else {
+			$_SESSION['pesan'] = "Gagal mengirimkan order";
+			$_SESSION['tipe'] = "error";
+			echo json_encode(array(
+				"status" => 500,
+				"link" => $this->read($id),
+				"message" => "Gagal"
+			));
+		}
+	}
+
 	public function read($id)
 	{
 		$row = $this->Order_pembacaan_model->get_by_id($id);
@@ -240,7 +266,7 @@ class Orders extends MY_Controller
 			$data = array(
 				'button' => 'Read',
 				'mode' => 'update',
-				'action' => site_url('order_pembacaan/update_action'),
+				'action' => site_url('orders/simpan_data'),
 				'id' => set_value('id', $row->id),
 				'id_order' => set_value('id_order', $row->id_order),
 				'id_client' => set_value('id_client', $row->id_client),
@@ -259,15 +285,37 @@ class Orders extends MY_Controller
 				'elemen_gigi' => set_value('elemen_gigi', $row->elemen_gigi),
 				'suspek' => set_value('suspek', $row->suspek),
 				'tarif' => set_value('tarif', $row->tarif),
+				'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
+				'tanggal_lahir_pasien' => set_value('tanggal_lahir_pasien', $row->tanggal_lahir_pasien),
+				'umur' => set_value('umur', $row->umur),
+				'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
+				'alamat_pasien' => set_value('alamat_pasien', $row->alamat_pasien),
+				'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
 			);
 			$this->load->view('header');
-			$this->load->view('order_pembacaan/order_pembacaan_form_read', $data);
+			$this->load->view('order_pembacaan/order_read', $data);
 			$this->load->view('footer');
 		} else {
 			$_SESSION['pesan'] = "Record Not Found";
 			$_SESSION['tipe'] = "error";
 			redirect(site_url('orders'));
 		}
+	}
+
+	public function get_harga_pembaca()
+	{
+		$id = $this->input->post('id');
+
+		$harga = $this->db->get_where('master_harga_pembaca', array('id_pembaca' => $id))->result();
+
+		$html = "<option value=''>Choose an option</option>";
+		foreach ($harga as $rows) {
+			$html .= "<option value='" . $rows->harga . "'>" . $rows->kode . " - " . number_format($rows->harga, 0, ',', '.') . "</option>";
+		}
+
+		$response = array('data' => $html);
+
+		echo json_encode($response);
 	}
 
 	public function simpanPilihPembaca()
@@ -311,7 +359,7 @@ class Orders extends MY_Controller
 		}
 	}
 
-	
+
 
 
 
@@ -340,8 +388,14 @@ class Orders extends MY_Controller
 				'status' => set_value('status', $row->status),
 				'intra_oral' => set_value('intra_oral', $row->intra_oral),
 				'elemen_gigi' => set_value('elemen_gigi', $row->elemen_gigi),
+				'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
+				'tanggal_lahir_pasien' => set_value('tanggal_lahir_pasien', $row->tanggal_lahir_pasien),
+				'umur' => set_value('umur', $row->umur),
+				'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
+				'alamat_pasien' => set_value('alamat_pasien', $row->alamat_pasien),
 				'suspek' => set_value('suspek', $row->suspek),
 				'tarif' => set_value('tarif', $row->tarif),
+				'harga_tambahan' => set_value('harga_tambahan', $row->harga_tambahan),
 			);
 			$this->load->view('header');
 			$this->load->view('order_pembacaan/order_pembacaan_form_pembaca', $data);
@@ -425,13 +479,14 @@ class Orders extends MY_Controller
 			'no_rekening' => set_value('no_rekening', $row->no_rekening),
 			'atas_nama' => set_value('atas_nama', $row->atas_nama),
 			'tanggal' => set_value('tanggal', $row->created_at),
-			'nama' => $this->db->get_where('users', array('id' => $row->id_client))->row()->nama,
-			'alamat' => $this->db->get_where('users', array('id' => $row->id_client))->row()->alamat,
-			'tempat' => $this->db->get_where('users', array('id' => $row->id_client))->row()->tempat,
-			'tanggal' => $this->db->get_where('users', array('id' => $row->id_client))->row()->tanggal_lahir,
-			'jk' => $this->db->get_where('users', array('id' => $row->id_client))->row()->jenis_kelamin,
+			'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
+			'tanggal_lahir_pasien' => set_value('tanggal_lahir_pasien', $row->tanggal_lahir_pasien),
+			'umur' => set_value('umur', $row->umur),
+			'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
+			'alamat_pasien' => set_value('alamat_pasien', $row->alamat_pasien),
+			'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
 			'tlp' => $this->db->get_where('users', array('id' => $row->id_client))->row()->telepon,
-			'umur' => $umur,
+			// 'umur' => $umur,
 
 		);
 		$this->load->library('pdf');
@@ -468,10 +523,11 @@ class Orders extends MY_Controller
 		$details = $_POST['details'];
 		$idOrder = $_POST['idOrder'];
 		$idClient = $_POST['id_client'];
-		$intraOral = $_POST['intra_oral'];
-		$elemenGigi = $_POST['elemen_gigi'];
+		// $intraOral = $_POST['intra_oral'];
+		// $elemenGigi = $_POST['elemen_gigi'];
 		$suspek = $_POST['suspek'];
 		$hargaPembacaan = $_POST['harga_pembacaan'];
+		$hargaTambahan = $_POST['harga_tambahan'];
 		$id = $_POST['id'];
 		$namaBank = $_SESSION['nama_bank'];
 		$noRek = $_SESSION['no_rekening'];
@@ -480,32 +536,36 @@ class Orders extends MY_Controller
 		foreach ($details as $dj) {
 			$detail_pembacaan[] = [
 				"id_order" =>  $idOrder,
-				"elemen" => $dj['elemen'],
-				"keterangan" => $dj['keterangan'],
+				"angka" => $dj['angka'],
+				"lokasi" => $dj['lokasi'],
+				"keterangan" => $dj['keterangan'] == "" ? "" : $dj['keterangan'],
+				"radiodiagnosis_khusus" => $dj['radiodiagnosis_khusus'] == "" ? "" : $dj['radiodiagnosis_khusus'],
 			];
 		}
 		$this->db->where('id_order', $idOrder);
-		$this->db->delete('detail_pembacaan');
+		$this->db->delete('detail_regio_angka');
 
 		if ($revisi == "") {
 			$data = array(
 				"tarif" => $hargaPembacaan,
+				"harga_tambahan" => $hargaTambahan,
 				"no_rekening" => $noRek,
 				"nama_bank" => $namaBank,
 				"atas_nama" => $atasNama,
-				"intra_oral" => $intraOral,
-				"elemen_gigi" => $elemenGigi,
+				"intra_oral" => "",
+				"elemen_gigi" => "",
 				"suspek" => $suspek,
 				"status" => 3
 			);
 		} else {
 			$data = array(
 				"tarif" => $hargaPembacaan,
+				"harga_tambahan" => $hargaTambahan,
 				"no_rekening" => $noRek,
 				"nama_bank" => $namaBank,
 				"atas_nama" => $atasNama,
-				"intra_oral" => $intraOral,
-				"elemen_gigi" => $elemenGigi,
+				"intra_oral" => "",
+				"elemen_gigi" => "",
 				"suspek" => $suspek,
 				"status" => 3,
 				"status_revisi" => 1
@@ -513,7 +573,7 @@ class Orders extends MY_Controller
 		}
 		$this->db->where('id', $id);
 		$update = $this->db->update('order_pembacaan', $data);
-		$insert = $this->db->insert_batch('detail_pembacaan', $detail_pembacaan);
+		$insert = $this->db->insert_batch('detail_regio_angka', $detail_pembacaan);
 
 		if ($update) {
 			$response = [

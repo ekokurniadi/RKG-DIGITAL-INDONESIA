@@ -12,6 +12,7 @@ class Order_pembacaan extends MY_Controller
 	{
 		parent::__construct();
 		$this->load->model('Order_pembacaan_model');
+		$this->load->model('Email_model');
 		$this->load->library('form_validation');
 		date_default_timezone_set('Asia/Jakarta');
 	}
@@ -30,7 +31,8 @@ class Order_pembacaan extends MY_Controller
 
 	public function ajukan($id)
 	{
-		$this->db->where('id', $id);
+		$kode = decrypt_url($id);
+		$this->db->where('id', $kode);
 		$update = $this->db->update('order_pembacaan', array('status' => 0));
 
 		$data = array(
@@ -55,10 +57,11 @@ class Order_pembacaan extends MY_Controller
 	}
 	public function complete($id)
 	{
-		$this->db->where('id', $id);
+		$kode = decrypt_url($id);
+		$this->db->where('id', $kode);
 		// complete order
 		$update = $this->db->update('order_pembacaan', array('status' => 6));
-		$row = $this->Order_pembacaan_model->get_by_id($id);
+		$row = $this->Order_pembacaan_model->get_by_id($kode);
 		$data = array(
 			"pesan" => $_SESSION['nama'] . " sudah menyelesaikan order pembacaan gambar.",
 			"status" => 0,
@@ -82,7 +85,8 @@ class Order_pembacaan extends MY_Controller
 
 	public function download_hasil_pembacaan($id)
 	{
-		$row = $this->Order_pembacaan_model->get_by_id($id);
+		$kode = decrypt_url($id);
+		$row = $this->Order_pembacaan_model->get_by_id($kode);
 		date_default_timezone_set('Asia/Jakarta');
 		$dt = $this->db->get_where('users', array('id' => $row->id_client))->row();
 		$date = new DateTime('today');
@@ -114,11 +118,11 @@ class Order_pembacaan extends MY_Controller
 			'no_rekening' => set_value('no_rekening', $row->no_rekening),
 			'atas_nama' => set_value('atas_nama', $row->atas_nama),
 			'tanggal' => set_value('tanggal', $row->created_at),
-			'nama' => $this->db->get_where('users', array('id' => $row->id_client))->row()->nama,
-			'alamat' => $this->db->get_where('users', array('id' => $row->id_client))->row()->alamat,
-			'tempat' => $this->db->get_where('users', array('id' => $row->id_client))->row()->tempat,
-			'tanggal' => $this->db->get_where('users', array('id' => $row->id_client))->row()->tanggal_lahir,
-			'jk' => $this->db->get_where('users', array('id' => $row->id_client))->row()->jenis_kelamin,
+			'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
+			'tanggal_lahir_pasien' => set_value('tanggal_lahir_pasien', $row->tanggal_lahir_pasien),
+			'umur' => set_value('umur', $row->umur),
+			'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
+			'alamat_pasien' => set_value('alamat_pasien', $row->alamat_pasien),
 			'tlp' => $this->db->get_where('users', array('id' => $row->id_client))->row()->telepon,
 			'pembaca_nama' => $this->db->get_where('users', array('id' => $row->id_pembaca))->row()->nama,
 			'umur' => $umur,
@@ -130,19 +134,19 @@ class Order_pembacaan extends MY_Controller
 		$mpdf->charset_in               = 'UTF-8';
 		$mpdf->autoLangToFont           = true;
 		$mpdf->AddPage('P');
-		// $mpdf = new mPDF(
-		// 	'',    // mode - default ''
-		// 	'',    // format - A4, for example, default ''
-		// 	0,     // font size - default 0
-		// 	'',    // default font family
-		// 	0,    // margin_left
-		// 	0,    // margin right
-		// 	0,     // margin top
-		// 	0,    // margin bottom
-		// 	0,     // margin header
-		// 	0,     // margin footer
-		// 	'P'
-		// );
+		$mpdf = new mPDF(
+			'',    // mode - default ''
+			'',    // format - A4, for example, default ''
+			0,     // font size - default 0
+			'',    // default font family
+			0,    // margin_left
+			0,    // margin right
+			-1,     // margin top
+			-1,    // margin bottom
+			0,     // margin header
+			0,     // margin footer
+			'P'
+		);
 		$mpdf->SetDisplayMode('fullwidth');
 		$stylesheet = file_get_contents(base_url('assets/styles.css'), true);
 
@@ -155,7 +159,8 @@ class Order_pembacaan extends MY_Controller
 
 	public function view_hasil($id)
 	{
-		$row = $this->Order_pembacaan_model->get_by_id($id);
+		$kode = decrypt_url($id);
+		$row = $this->Order_pembacaan_model->get_by_id($kode);
 
 		if ($row) {
 			$data = array(
@@ -180,6 +185,13 @@ class Order_pembacaan extends MY_Controller
 				'elemen_gigi' => set_value('elemen_gigi', $row->elemen_gigi),
 				'suspek' => set_value('suspek', $row->suspek),
 				'tarif' => set_value('tarif', $row->tarif),
+				'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
+				'tanggal_lahir_pasien' => set_value('tanggal_lahir_pasien', $row->tanggal_lahir_pasien),
+				'umur' => set_value('umur', $row->umur),
+				'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
+				'alamat_pasien' => set_value('alamat_pasien', $row->alamat_pasien),
+				'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
+				'harga_tambahan' => set_value('harga_tambahan', $row->harga_tambahan),
 			);
 			$this->load->view('client/header');
 			$this->load->view('order_pembacaan/order_pembacaan_form_pembaca', $data);
@@ -245,43 +257,39 @@ class Order_pembacaan extends MY_Controller
 		$fetch2 = $this->db->query("SELECT * from order_pembacaan $where2");
 		foreach ($fetch->result() as $rows) {
 
-			$button1 = "<a style='margin-bottom:3px;color:white' href=" . base_url('order_pembacaan/update2/' . $rows->id) . " data-color='white' class='btn btn-light bg-dark btn-flat btn-sm' style='color: white;'> View</a>";
-			$button2 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/update/' . $rows->id) . " data-color='white' class='btn btn-warning btn-flat btn-sm' style='color: dark;'>Edit</a>";
-			$button3 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/cetak/' . $rows->id) . " data-color='white' class='btn btn-danger btn-flat btn-sm' style='color: white;' target='_blank'>Download</a>";
-			$button4 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/ajukan/' . $rows->id) . " data-color='white' class='btn btn-danger btn-flat btn-sm' style='color: white;'>Ajukan</a>";
+			$button1 = "<a style='margin-bottom:3px;color:white' href=" . base_url('order_pembacaan/update2/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-light bg-dark btn-flat btn-sm' style='color: white;'> View</a>";
+			$button2 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/update/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-warning btn-flat btn-sm' style='color: dark;'>Edit</a>";
+			$button3 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/cetak/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-danger btn-flat btn-sm' style='color: white;' target='_blank'>Download</a>";
+			$button4 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/ajukan/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-danger btn-flat btn-sm' style='color: white;'>Ajukan</a>";
 			$button5 = "<button style='margin-bottom:3px' type='button' onclick='open_modalRevisi(" . $rows->id . ")' data-color='white' class='btn btn-info btn-flat btn-sm' style='color: white;'>Ajukan Revisi</button>";
-			$button7 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/view_hasil/' . $rows->id) . " data-color='white' class='btn btn-warning btn-flat btn-sm' style='color: white;'>Lihat Hasil</a>";
-			$button8 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/view_invoice/' . $rows->id) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Invoice</a>";
-			$button9 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/complete/' . $rows->id) . " data-color='white' class='btn btn-primary btn-flat btn-sm' onclick='javascript: return confirm(\"Are You Sure ?\")' style='color: white;'>Selesaikan Order</a>";
-			$button10 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/download_hasil_pembacaan/' . $rows->id) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Download Hasil Pembacaan</a>";
+			$button7 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/view_hasil/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-warning btn-flat btn-sm' style='color: white;'>Lihat Hasil</a>";
+			$button8 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/view_invoice/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Invoice</a>";
+			$button9 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/complete/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-primary btn-flat btn-sm' onclick='javascript: return confirm(\"Are You Sure ?\")' style='color: white;'>Selesaikan Order</a>";
+			$button10 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/download_hasil_pembacaan/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Download Hasil Pembacaan</a>";
+			$button11 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/tes_email/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Download Hasil Pembacaan</a>";
 			$button6 = "<button type='button' onclick='open_modal(" . $rows->id . ")' data-color='white' class='btn btn-info btn-flat btn-sm' style='color: white;'>Upload Bukti Pembayaran</button>";
 			if ($rows->status == 10) {
 				$button = $button1 . " " . $button2 . "<br> " . $button4 . " " . $button3;
 			} elseif ($rows->status == 0) {
 				$button = $button1 . " " . $button3;
-			} elseif ($rows->status == 3 and $rows->status_pembayaran == 0) {
-				$button = $button1 . " " . $button6 . "<br> " . $button7 . " " . $button8 . "<br> " . $button3 . " " . $button10;
-			} elseif ($rows->status == 4) {
+			} elseif ($rows->status == 3 and $rows->status_pembayaran == 3) {
+				$button = $button1 . " " . $button7 . " " . $button8 . "<br> " . $button3 . " " . $button10;
+			} elseif ($rows->status == 4 and $rows->status_pembayaran == 3) {
 				$button = $button1 . " " . $button7 . "<br> " . $button8 . " " . $button3;
+			} elseif ($rows->status == 4 and $rows->status_pembayaran == 2) {
+				$button = $button1 . " " . $button6 . "<br> " . $button8 . " " . $button3;
+			} elseif ($rows->status == 3 and $rows->status_pembayaran == 0) {
+				$button = $button1 . " " . $button8 . " " . $button6;
 			} elseif ($rows->status == 3 and $rows->status_pembayaran == 1) {
-				$button = $button1 . " " . $button5 . "<br> " . $button7 . " " . $button8 . "<br> " . $button3 . " " . $button9 . "<br> " . $button10;
+				$button = $button1 . " " . $button8;
+			} elseif ($rows->status == 3 and $rows->status_pembayaran == 2) {
+				$button = $button1 . " " . $button8 . " " . $button6;
+			} elseif ($rows->status == 4 and $rows->status_pembayaran == 1) {
+				$button = $button1 . " " . $button8 . " " . $button6;
 			} elseif ($rows->status == 1) {
 				$button = $button1 . " " . $button3;
 			}
 			$sub_array = array();
-			// $sub_array[] = $index;
-			// $sub_array[] = $rows->id_order;
-			// // $sub_array[] = $rows->id_client;
-			// $sub_array[] = $rows->no_rekam_medis;
-			// // $sub_array[] = $rows->dokter_pengirim;
-			// // $sub_array[] = $rows->alamat;
-			// // $sub_array[] = $rows->foto;
-			// // $sub_array[] = $rows->indikasi_pemeriksaan;
-			// // $sub_array[] = $rows->dokter_pemeriksa;
-			// $sub_array[] = $rows->created_at;
-			// // $sub_array[] = $rows->id_pembaca;
-			// $sub_array[] = $rows->status;
-			// $sub_array[] = $rows->tarif;
 			$pembaca =  $rows->id_pembaca == 0 ? 'Belum ditentukan oleh admin' : $this->db->get_where('users', array('id' => $rows->id_pembaca))->row()->nama;
 			$status = "";
 			if ($rows->status == 0) {
@@ -302,8 +310,12 @@ class Order_pembacaan extends MY_Controller
 			$status_pembayaran = "";
 			if ($rows->status_pembayaran == 0) {
 				$status_pembayaran = "Belum dibayar";
+			} elseif ($rows->status_pembayaran == 1) {
+				$status_pembayaran = "Menunggu Konfirmasi";
+			} elseif ($rows->status_pembayaran == 2) {
+				$status_pembayaran = "Reject by admin";
 			} else {
-				$status_pembayaran = "Sudah dibayar";
+				$status_pembayaran = "Disetujui";
 			}
 			$infoPembayaran = "
             <div class='col-md-12 col-sm-6 col-xs-6 mt-2'>
@@ -365,7 +377,8 @@ class Order_pembacaan extends MY_Controller
 
 	public function view_invoice($id)
 	{
-		$row = $this->Order_pembacaan_model->get_by_id($id);
+		$kode = decrypt_url($id);
+		$row = $this->Order_pembacaan_model->get_by_id($kode);
 
 		if ($row) {
 			$data = array(
@@ -394,8 +407,9 @@ class Order_pembacaan extends MY_Controller
 				'no_rekening' => set_value('no_rekening', $row->no_rekening),
 				'atas_nama' => set_value('atas_nama', $row->atas_nama),
 				'tanggal' => set_value('tanggal', $row->created_at),
-				'nama' => $this->db->get_where('users', array('id' => $row->id_client))->row()->nama,
-				'alamat' => $this->db->get_where('users', array('id' => $row->id_client))->row()->alamat,
+				'nama' => set_value('nama', $row->nama_pasien),
+				'alamat' => set_value('alamat', $row->alamat_pasien),
+				'harga_tambahan' => set_value('harga_tambahan', $row->harga_tambahan),
 			);
 			$this->load->library('pdf');
 			$mpdf                           = $this->pdf->load();
@@ -417,9 +431,22 @@ class Order_pembacaan extends MY_Controller
 		}
 	}
 
+	public function tes_email($id){
+		$link = base_url()."order_pembacaan/view_hasil/".$id;
+		$message ="";
+		$message.="<h3>Email Pemberitahuan</h3><hr>
+		Kepada Yth. <br>
+		$id<br><br>
+		Kami menginformasikan bahwa order anda dengan kode $id telah berhasil di proses
+		silahkan klik link $link berikut untuk melakukan tahap selajutnya
+		";
+		$this->Email_model->sendEmail($message, "calonskom18@gmail.com");
+	}
+
 	public function cetak($id)
 	{
-		$row = $this->Order_pembacaan_model->get_by_id($id);
+		$kode = decrypt_url($id);
+		$row = $this->Order_pembacaan_model->get_by_id($kode);
 		date_default_timezone_set('Asia/Jakarta');
 		$dt = $this->db->get_where('users', array('id' => $row->id_client))->row();
 		$date = new DateTime('today');
@@ -451,11 +478,12 @@ class Order_pembacaan extends MY_Controller
 			'no_rekening' => set_value('no_rekening', $row->no_rekening),
 			'atas_nama' => set_value('atas_nama', $row->atas_nama),
 			'tanggal' => set_value('tanggal', $row->created_at),
-			'nama' => $this->db->get_where('users', array('id' => $row->id_client))->row()->nama,
-			'alamat' => $this->db->get_where('users', array('id' => $row->id_client))->row()->alamat,
-			'tempat' => $this->db->get_where('users', array('id' => $row->id_client))->row()->tempat,
-			'tanggal' => $this->db->get_where('users', array('id' => $row->id_client))->row()->tanggal_lahir,
-			'jk' => $this->db->get_where('users', array('id' => $row->id_client))->row()->jenis_kelamin,
+			'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
+			'tanggal_lahir_pasien' => set_value('tanggal_lahir_pasien', $row->tanggal_lahir_pasien),
+			'umur' => set_value('umur', $row->umur),
+			'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
+			'alamat_pasien' => set_value('alamat_pasien', $row->alamat_pasien),
+			'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
 			'tlp' => $this->db->get_where('users', array('id' => $row->id_client))->row()->telepon,
 			'umur' => $umur,
 
@@ -508,7 +536,8 @@ class Order_pembacaan extends MY_Controller
 
 	public function read($id)
 	{
-		$row = $this->Order_pembacaan_model->get_by_id($id);
+		$kode = decrypt_url($id);
+		$row = $this->Order_pembacaan_model->get_by_id($kode);
 		if ($row) {
 			$data = array(
 				'id' => $row->id,
@@ -705,6 +734,12 @@ class Order_pembacaan extends MY_Controller
 			'id_pembaca' => set_value('id_pembaca'),
 			'status' => set_value('status'),
 			'tarif' => set_value('tarif'),
+			'nama_pasien' => set_value('nama_pasien'),
+			'tanggal_lahir_pasien' => set_value('tanggal_lahir_pasien'),
+			'umur' => set_value('umur'),
+			'jenis_kelamin' => set_value('jenis_kelamin'),
+			'alamat_pasien' => set_value('alamat_pasien'),
+			'tempat_lahir' => set_value('tempat_lahir'),
 		);
 
 		$this->load->view('client/header');
@@ -717,7 +752,7 @@ class Order_pembacaan extends MY_Controller
 		$this->_rules();
 
 		if ($this->form_validation->run() == FALSE) {
-			$this->update($this->input->post('id', TRUE));
+			$this->create();
 		} else {
 			$data = array(
 				'id_order' => $this->input->post('id_order', TRUE),
@@ -730,7 +765,13 @@ class Order_pembacaan extends MY_Controller
 				'dokter_pemeriksa' => $this->input->post('dokter_pemeriksa', TRUE),
 				'pemeriksaan' => $this->input->post('pemeriksaan', TRUE),
 				'catatan_pemeriksaan' => $this->input->post('catatan', TRUE),
-				'status' => 10,
+				'nama_pasien' => $this->input->post('nama_pasien', TRUE),
+				'tanggal_lahir_pasien' => $this->input->post('tanggal_lahir_pasien', TRUE),
+				'umur' => $this->input->post('umur', TRUE),
+				'jenis_kelamin' => $this->input->post('jenis_kelamin', TRUE),
+				'alamat_pasien' => $this->input->post('alamat_pasien', TRUE),
+				'tempat_lahir' => $this->input->post('tempat_lahir', TRUE),
+				'status' => 0,
 				'tarif' => 0,
 
 			);
@@ -755,7 +796,7 @@ class Order_pembacaan extends MY_Controller
 				$kiri_bawah = array(
 					"id_order" => $_POST['id_order'],
 					"angka" => $_POST['kiri_bawah'][$i],
-					"lokasi" => 3
+					"lokasi" => 4
 				);
 				$this->db->insert('detail_regio_angka', $kiri_bawah);
 			}
@@ -763,7 +804,7 @@ class Order_pembacaan extends MY_Controller
 				$kanan_bawah = array(
 					"id_order" => $_POST['id_order'],
 					"angka" => $_POST['kanan_bawah'][$i],
-					"lokasi" => 4
+					"lokasi" => 3
 				);
 				$this->db->insert('detail_regio_angka', $kanan_bawah);
 			}
@@ -787,7 +828,7 @@ class Order_pembacaan extends MY_Controller
 				$romawi_kiri_bawah = array(
 					"id_order" => $_POST['id_order'],
 					"angka" => $_POST['romawi_kiri_bawah'][$i],
-					"lokasi" => 7
+					"lokasi" => 8
 				);
 				$this->db->insert('detail_regio_angka', $romawi_kiri_bawah);
 			}
@@ -795,7 +836,7 @@ class Order_pembacaan extends MY_Controller
 				$romawi_kanan_bawah = array(
 					"id_order" => $_POST['id_order'],
 					"angka" => $_POST['romawi_kanan_bawah'][$i],
-					"lokasi" => 8
+					"lokasi" => 9
 				);
 				$this->db->insert('detail_regio_angka', $romawi_kanan_bawah);
 			}
@@ -817,7 +858,8 @@ class Order_pembacaan extends MY_Controller
 
 	public function update($id)
 	{
-		$row = $this->Order_pembacaan_model->get_by_id($id);
+		$kode = decrypt_url($id);
+		$row = $this->Order_pembacaan_model->get_by_id($kode);
 
 		if ($row) {
 			$data = array(
@@ -836,6 +878,7 @@ class Order_pembacaan extends MY_Controller
 				'dokter_pemeriksa' => set_value('dokter_pemeriksa', $row->dokter_pemeriksa),
 				'created_at' => set_value('created_at', $row->created_at),
 				'id_pembaca' => set_value('id_pembaca', $row->id_pembaca),
+
 				'status' => set_value('status', $row->status),
 				'tarif' => set_value('tarif', $row->tarif),
 			);
@@ -850,7 +893,8 @@ class Order_pembacaan extends MY_Controller
 	}
 	public function update2($id)
 	{
-		$row = $this->Order_pembacaan_model->get_by_id($id);
+		$kode = decrypt_url($id);
+		$row = $this->Order_pembacaan_model->get_by_id($kode);
 
 		if ($row) {
 			$data = array(
@@ -869,6 +913,12 @@ class Order_pembacaan extends MY_Controller
 				'dokter_pemeriksa' => set_value('dokter_pemeriksa', $row->dokter_pemeriksa),
 				'created_at' => set_value('created_at', $row->created_at),
 				'id_pembaca' => set_value('id_pembaca', $row->id_pembaca),
+				'nama_pasien' => set_value('nama_pasien', $row->nama_pasien),
+				'tanggal_lahir_pasien' => set_value('tanggal_lahir_pasien', $row->tanggal_lahir_pasien),
+				'umur' => set_value('umur', $row->umur),
+				'jenis_kelamin' => set_value('jenis_kelamin', $row->jenis_kelamin),
+				'alamat_pasien' => set_value('alamat_pasien', $row->alamat_pasien),
+				'tempat_lahir' => set_value('tempat_lahir', $row->tempat_lahir),
 				'status' => set_value('status', $row->status),
 				'tarif' => set_value('tarif', $row->tarif),
 			);
@@ -935,6 +985,12 @@ class Order_pembacaan extends MY_Controller
 		$this->form_validation->set_rules('id_client', 'id client', '');
 		$this->form_validation->set_rules('no_rekam_medis', 'no rekam medis', 'trim|required');
 		$this->form_validation->set_rules('dokter_pengirim', 'dokter pengirim', 'trim|required');
+		$this->form_validation->set_rules('nama_pasien', 'nama pasien', 'trim|required');
+		$this->form_validation->set_rules('tanggal_lahir_pasien', 'tanggal lahir pasien', 'trim|required');
+		$this->form_validation->set_rules('umur', 'umur pasien', 'trim|required');
+		$this->form_validation->set_rules('jenis_kelamin', 'jenis kelamin pasien', 'trim|required');
+		$this->form_validation->set_rules('alamat_pasien', 'alamat pasien', 'trim|required');
+		$this->form_validation->set_rules('tempat_lahir', 'tempat lahir', 'trim|required');
 		$this->form_validation->set_rules('alamat', 'alamat', 'trim|required');
 		$this->form_validation->set_rules('foto', 'foto', '');
 		$this->form_validation->set_rules('indikasi_pemeriksaan', 'indikasi pemeriksaan', 'trim|required');
