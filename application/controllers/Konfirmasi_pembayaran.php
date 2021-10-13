@@ -6,6 +6,7 @@ class Konfirmasi_pembayaran extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('Order_pembacaan_model');
+		$this->load->model('Email_model');
 	}
 
 	public function index()
@@ -67,11 +68,6 @@ class Konfirmasi_pembayaran extends CI_Controller
 		foreach ($fetch->result() as $rows) {
 			$func = '1';
 			$button1 = "<a href=" . base_url('konfirmasi_pembayaran/view/' . $rows->id) . "  class='btn btn-info btn-sm' style='color:white'><i class='icon-copy dw dw-eye'></i> View</a>";
-			// $button2 = "<a href='#' onClick='openModal(" . $rows->id . "," . $func . ")' class='btn btn-danger btn-sm' style='color:white'>Pilih Pembaca </a>";
-			// $button3 = "<a href=" . base_url('orders/proses/' . $rows->id) . " class='btn btn-danger btn-sm' style='color:white'>Proses </a>";
-			// // $button5 = "<a href=" . base_url('orders/complete/' . $rows->id) . " class='btn btn-success btn-sm' style='color:white'>Selesaikan Order </a>";
-			// $button4 = "<a href=" . base_url('orders/download_form_order/' . $rows->id) . " class='btn btn-success btn-sm' style='color:white'>Download </a>";
-			// $button5 = "<a href=" . base_url('orders/revisi/' . $rows->id) . " class='btn btn-danger btn-sm' style='color:white'>Proses Revisi </a>";
 
 			$state = "";
 			if ($rows->status_pembayaran == 1) {
@@ -87,7 +83,6 @@ class Konfirmasi_pembayaran extends CI_Controller
 			$sub_array[] = formatTanggal($rows->created_at);
 			$sub_array[] = $rows->nama;
 			$sub_array[] = $rows->dokter_pengirim;
-			// $sub_array[] = $rows->indikasi_pemeriksaan;
 			$sub_array[] = $rows->id_pembaca == 0 ? "Belum dipilih" : $this->db->get_where('users', array('id' => $rows->id_pembaca))->row()->nama;
 			$sub_array[] = $state;
 			$sub_array[] = '<div class="table-actions">' . $button1 . '</div>';
@@ -104,28 +99,69 @@ class Konfirmasi_pembayaran extends CI_Controller
 	}
 
 	public function view($id)
-	 {
-			$row = $this->Order_pembacaan_model->get_by_id($id);
+	{
+		$row = $this->Order_pembacaan_model->get_by_id($id);
 
-			if ($row) {
-				$data = array(
-					'button' => 'Update',
-					'action' => site_url('level/update_action'),
-					'id' => set_value('id', $row->id),
-					'kode_order' => set_value('kode_order', $row->id_order),
-					'bukti_pembayaran' => set_value('bukti_pembayaran', $row->bukti_pembayaran),
-					'status_pembayaran' => set_value('status_pembayaran', $row->status_pembayaran),
-					'total' => set_value('total', $row->tarif + $row->harga_tambahan),
-					'nama' => set_value('nama', $this->db->get_where('users', array('id' => $row->id_client))->row()->nama),
-				);
-				$this->load->view('header');
-				$this->load->view('orders/konfirmasi_form', $data);
-				$this->load->view('footer');
-			} else {
-				$_SESSION['pesan'] = "Record Not Found";
-				$_SESSION['tipe'] = "error";
-				redirect(site_url('konfirmasi_pembayaran'));
-			}
-		
+		if ($row) {
+			$data = array(
+				'button' => 'Update',
+				'action' => site_url('konfirmasi_pembayaran/update_action'),
+				'id' => set_value('id', $row->id),
+				'kode_order' => set_value('kode_order', $row->id_order),
+				'bukti_pembayaran' => set_value('bukti_pembayaran', $row->bukti_pembayaran),
+				'status_pembayaran' => set_value('status_pembayaran', $row->status_pembayaran),
+				'total' => set_value('total', $row->tarif + $row->harga_tambahan),
+				'nama' => set_value('nama', $this->db->get_where('users', array('id' => $row->id_client))->row()->nama),
+			);
+			$this->load->view('header');
+			$this->load->view('orders/konfirmasi_form', $data);
+			$this->load->view('footer');
+		} else {
+			$_SESSION['pesan'] = "Record Not Found";
+			$_SESSION['tipe'] = "error";
+			redirect(site_url('konfirmasi_pembayaran'));
+		}
+	}
+
+	public function update_action()
+	{
+		$id = $this->input->post('id');
+		$row = $this->Order_pembacaan_model->get_by_id($id);
+		$status_pembayaran = $this->input->post('status_pembayaran');
+		$status = "Pilih status";
+		if ($status_pembayaran == 0) {
+			$status = "Belum dibayar";
+		} elseif ($status_pembayaran == 1) {
+			$status = "Menunggu konfirmasi";
+		} elseif ($status_pembayaran == 2) {
+			$status = "Ditolak";
+		} else {
+			$status = "Disetujui";
+		}
+		$link = base_url() . "order_pembacaan";
+		$namaClient = "";
+		$namaClient = $this->db->get_where('users', array('id' => $row->id_client))->row();
+		$mail = "";
+		$mail .= "<h3>Email Pemberitahuan</h3><hr>
+			Kepada Yth. <br>
+			$namaClient->nama<br><br>
+			Kami menginformasikan bahwa pembayaran anda pada kode order $row->id_order $status, klik link $link berikut untuk melihat data .
+			";
+
+		$data = array(
+			"status_pembayaran" => $status_pembayaran
+		);
+		$this->db->where('id', $id);
+		$update = $this->db->update('order_pembacaan', $data);
+		if ($update) {
+			$this->Email_model->sendEmail($mail, $namaClient->username);
+			$_SESSION['pesan'] = "Successfully";
+			$_SESSION['tipe'] = "success";
+			redirect(site_url('konfirmasi_pembayaran'));
+		} else {
+			$_SESSION['pesan'] = "Something when wrong";
+			$_SESSION['tipe'] = "error";
+			redirect(site_url('konfirmasi_pembayaran'));
+		}
 	}
 }

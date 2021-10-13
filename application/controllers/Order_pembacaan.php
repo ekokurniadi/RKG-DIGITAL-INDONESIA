@@ -28,6 +28,13 @@ class Order_pembacaan extends MY_Controller
 		$this->load->view('order_pembacaan/order_pembacaan_list', $data);
 		$this->load->view('client/footer');
 	}
+	public function history()
+	{
+		
+		$this->load->view('client/header');
+		$this->load->view('order_pembacaan/history');
+		$this->load->view('client/footer');
+	}
 
 	public function ajukan($id)
 	{
@@ -225,8 +232,8 @@ class Order_pembacaan extends MY_Controller
 		$search       = $this->input->post("search")["value"];
 		$orders       = isset($_POST["order"]) ? $_POST["order"] : '';
 
-		$where = "WHERE 1=1 and id_client='$id' ";
-		$where2 = "WHERE 1=1 and id_client='$id' ";
+		$where = "WHERE 1=1 and id_client='$id' and status !=6";
+		$where2 = "WHERE 1=1 and id_client='$id' and status !=6";
 		$result = array();
 		if (isset($search)) {
 			if ($search != '') {
@@ -253,10 +260,10 @@ class Order_pembacaan extends MY_Controller
 				$order_by   = $order[0]['dir'];
 				$where .= " ORDER BY $order_clm $order_by ";
 			} else {
-				$where .= " ORDER BY id ASC ";
+				$where .= " ORDER BY id DESC ";
 			}
 		} else {
-			$where .= " ORDER BY id ASC ";
+			$where .= " ORDER BY id DESC ";
 		}
 		if (isset($LIMIT)) {
 			if ($LIMIT != '') {
@@ -285,9 +292,9 @@ class Order_pembacaan extends MY_Controller
 			} elseif ($rows->status == 0) {
 				$button = $button1 . " " . $button3;
 			} elseif ($rows->status == 3 and $rows->status_pembayaran == 3) {
-				$button = $button1 . " " . $button7 . " " . $button8 . "<br> " . $button3 . " " . $button10;
+				$button = $button1 . " " . $button7 . " " . $button8 . "<br> " . $button3 . " " . $button10 ." <br> " . $button5 ." ". $button9;
 			} elseif ($rows->status == 4 and $rows->status_pembayaran == 3) {
-				$button = $button1 . " " . $button7 . "<br> " . $button8 . " " . $button3;
+				$button = $button1 . " " . $button7 . "<br> " . $button8 . " " . $button3." <br> " . $button5 ." ". $button9;
 			} elseif ($rows->status == 4 and $rows->status_pembayaran == 2) {
 				$button = $button1 . " " . $button6 . "<br> " . $button8 . " " . $button3;
 			} elseif ($rows->status == 3 and $rows->status_pembayaran == 0) {
@@ -300,6 +307,179 @@ class Order_pembacaan extends MY_Controller
 				$button = $button1 . " " . $button8 . " " . $button6;
 			} elseif ($rows->status == 1) {
 				$button = $button1 . " " . $button3;
+			}
+			$sub_array = array();
+			$pembaca =  $rows->id_pembaca == 0 ? 'Belum ditentukan oleh admin' : $this->db->get_where('users', array('id' => $rows->id_pembaca))->row()->nama;
+			$status = "";
+			if ($rows->status == 0) {
+				$status = "Menunggu Konfirmasi";
+			} elseif ($rows->status == 1) {
+				$status = "Proses";
+			} elseif ($rows->status == 2) {
+				$status = "Dalam Pengerjaan";
+			} elseif ($rows->status == 3) {
+				$status = "Selesai Pengerjaan";
+			} elseif ($rows->status == 4) {
+				$status = "Pengajuan Revisi";
+			} elseif ($rows->status == 10) {
+				$status = "Draft";
+			} else {
+				$status = "Selesai";
+			}
+			$status_pembayaran = "";
+			if ($rows->status_pembayaran == 0) {
+				$status_pembayaran = "Belum dibayar";
+			} elseif ($rows->status_pembayaran == 1) {
+				$status_pembayaran = "Menunggu Konfirmasi";
+			} elseif ($rows->status_pembayaran == 2) {
+				$status_pembayaran = "Reject by admin";
+			} else {
+				$status_pembayaran = "Disetujui";
+			}
+			$infoPembayaran = "
+            <div class='col-md-12 col-sm-6 col-xs-6 mt-2'>
+                <span class='badge bg-info text-white'>Status Pembayaran : " . $status_pembayaran . "</span>
+            </div>";
+			// $notif = "";
+			// if ($rows->status == 3 && $rows->status_pembayaran == 1) {
+			//     $notif = $infoPembayaran;
+			// }elseif($rows->status == 3 && $rows->status_pembayaran == 0){
+
+			// }
+			if ($rows->no_rekening == "" || $rows->no_rekening == NULL) {
+				$nama_bank = " - ";
+				$atas_nama = " - ";
+				$no_rek = " - ";
+			} else {
+				$nama_bank = $rows->nama_bank;
+				$atas_nama = $rows->atas_nama;
+				$no_rek = $rows->no_rekening;
+			}
+			$sub_array[] = "<div class='row' style='text-align:left  !important'>
+            <div class='col-md-12' style='font-weight:bold;'>" .
+				"<i class='icon-copy dw dw-name' style='font-size:20px'></i> Order ID : " . $rows->id_order
+				. "</div>
+                <div class='col-md-12'><i class='icon-copy dw dw-agenda1' style='font-size:20px'></i> No.Rekam Medis : " . $rows->no_rekam_medis . "</div>
+               
+                <div class='col-md-12'><i class='icon-copy dw dw-calendar-1' style='font-size:20px'></i> Tanggal Order : " . tgl_indo(substr($rows->created_at, 0, 10)) . "</div>
+                <div class='col-md-12'><i class='icon-copy dw dw-money-2' style='font-size:20px'></i> Tarif : <span class='badge badge-md bg-danger text-white' style='font-size:15px'>Rp. " . number_format($rows->tarif + $rows->harga_tambahan, 0, ',', '.') . "</span></div>
+                <div class='col-md-12'><i class='icon-copy dw dw-house-11' style='font-size:18px'></i> Nama Bank : " . $nama_bank . "</div>
+                <div class='col-md-12'><i class='icon-copy dw dw-agenda' style='font-size:18px'></i> Atas Nama : " . $atas_nama . "</div>
+                <div class='col-md-12'><i class='icon-copy dw dw-wallet-1' style='font-size:18px'></i> No Rekening : " . $no_rek . "</div>
+                <div class='col-md-12'><i class='icon-copy dw dw-user1' style='font-size:18px'></i> Pembaca : " . $pembaca . "</div>
+                <div class='col-md-12 col-xs-6 col-sm-6'><i class='icon-copy dw dw-syringe' style='font-size:20px'></i> Indikasi : " . $rows->indikasi_pemeriksaan . "</div>
+                <div class='col-md-12'>&nbsp;</div>
+                <div class='col-md-12 col-sm-6 col-xs-6'>
+                    <span class='badge bg-success text-white'>Status Order : " . $status . "</span>
+                </div>
+              " . $infoPembayaran . "
+                <div class='col-md-12'>&nbsp;</div>
+                    <div class='col-md-12'>
+                   
+                    " . $button . "
+                   
+                    </div>
+            </div>";
+
+			// $sub_array[] = '<div class="table-actions">' . $button1 . " " . $button2 . " " . $button3 . '</div>';
+			$result[]      = $sub_array;
+			$index++;
+		}
+		$output = array(
+			"draw"            =>     intval($this->input->post("draw")),
+			"recordsFiltered" =>     $fetch2->num_rows(),
+			"data"            =>     $result,
+
+		);
+		echo json_encode($output);
+	}
+	public function fetch_data_history()
+	{
+		$id = $_SESSION['id'];
+		$starts       = $this->input->post("start");
+		$length       = $this->input->post("length");
+		$LIMIT        = "LIMIT $starts, $length ";
+		$draw         = $this->input->post("draw");
+		$search       = $this->input->post("search")["value"];
+		$orders       = isset($_POST["order"]) ? $_POST["order"] : '';
+
+		$where = "WHERE 1=1 and id_client='$id' and status =6";
+		$where2 = "WHERE 1=1 and id_client='$id' and status =6";
+		$result = array();
+		if (isset($search)) {
+			if ($search != '') {
+				$where .= " AND (id_order LIKE '%$search%' OR
+	                        id_client LIKE '%$search%' OR
+	                        no_rekam_medis LIKE '%$search%' OR
+	                        dokter_pengirim LIKE '%$search%' OR
+	                        alamat LIKE '%$search%' OR
+	                        foto LIKE '%$search%' OR
+	                        indikasi_pemeriksaan LIKE '%$search%' OR
+	                        dokter_pemeriksa LIKE '%$search%' OR
+	                        created_at LIKE '%$search%' OR
+	                        id_pembaca LIKE '%$search%' OR
+	                        status LIKE '%$search%' OR
+	                        tarif LIKE '%$search%')";
+			}
+		}
+
+		if (isset($orders)) {
+			if ($orders != '') {
+				$order = $orders;
+				$order_column = ['id_order', 'id_client', 'no_rekam_medis', 'dokter_pengirim', 'alamat', 'foto', 'indikasi_pemeriksaan', 'dokter_pemeriksa', 'created_at', 'id_pembaca', 'status', 'tarif',];
+				$order_clm  = $order_column[$order[0]['column']];
+				$order_by   = $order[0]['dir'];
+				$where .= " ORDER BY $order_clm $order_by ";
+			} else {
+				$where .= " ORDER BY id DESC ";
+			}
+		} else {
+			$where .= " ORDER BY id DESC ";
+		}
+		if (isset($LIMIT)) {
+			if ($LIMIT != '') {
+				$where .= ' ' . $LIMIT;
+			}
+		}
+		$index = 1;
+		$button = "";
+		$fetch = $this->db->query("SELECT * from order_pembacaan $where");
+		$fetch2 = $this->db->query("SELECT * from order_pembacaan $where2");
+		foreach ($fetch->result() as $rows) {
+
+			$button1 = "<a style='margin-bottom:3px;color:white' href=" . base_url('order_pembacaan/update2/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-light bg-dark btn-flat btn-sm' style='color: white;'> View</a>";
+			$button2 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/update/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-warning btn-flat btn-sm' style='color: dark;'>Edit</a>";
+			$button3 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/cetak/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-danger btn-flat btn-sm' style='color: white;' target='_blank'>Download</a>";
+			$button4 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/ajukan/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-danger btn-flat btn-sm' style='color: white;'>Ajukan</a>";
+			$button5 = "<button style='margin-bottom:3px' type='button' onclick='open_modalRevisi(" . $rows->id . ")' data-color='white' class='btn btn-info btn-flat btn-sm' style='color: white;'>Ajukan Revisi</button>";
+			$button7 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/view_hasil/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-warning btn-flat btn-sm' style='color: white;'>Lihat Hasil</a>";
+			$button8 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/view_invoice/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Invoice</a>";
+			$button9 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/complete/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-primary btn-flat btn-sm' onclick='javascript: return confirm(\"Are You Sure ?\")' style='color: white;'>Selesaikan Order</a>";
+			$button10 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/download_hasil_pembacaan/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Download Hasil Pembacaan</a>";
+			// $button11 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/tes_email/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Download Hasil Pembacaan</a>";
+			$button6 = "<button type='button' onclick='open_modal(" . $rows->id . ")' data-color='white' class='btn btn-info btn-flat btn-sm' style='color: white;'>Upload Bukti Pembayaran</button>";
+			if ($rows->status == 10) {
+				$button = $button1 . " " . $button2 . "<br> " . $button4 . " " . $button3;
+			} elseif ($rows->status == 0) {
+				$button = $button1 . " " . $button3;
+			} elseif ($rows->status == 3 and $rows->status_pembayaran == 3) {
+				$button = $button1 . " " . $button7 . " " . $button8 . "<br> " . $button3 . " " . $button10 ." <br> " . $button5 ." ". $button9;
+			} elseif ($rows->status == 4 and $rows->status_pembayaran == 3) {
+				$button = $button1 . " " . $button7 . "<br> " . $button8 . " " . $button3." <br> " . $button5 ." ". $button9;
+			} elseif ($rows->status == 4 and $rows->status_pembayaran == 2) {
+				$button = $button1 . " " . $button6 . "<br> " . $button8 . " " . $button3;
+			} elseif ($rows->status == 3 and $rows->status_pembayaran == 0) {
+				$button = $button1 . " " . $button8 . " " . $button6;
+			} elseif ($rows->status == 3 and $rows->status_pembayaran == 1) {
+				$button = $button1 . " " . $button8;
+			} elseif ($rows->status == 3 and $rows->status_pembayaran == 2) {
+				$button = $button1 . " " . $button8 . " " . $button6;
+			} elseif ($rows->status == 4 and $rows->status_pembayaran == 1) {
+				$button = $button1 . " " . $button8 . " " . $button6;
+			} elseif ($rows->status == 1) {
+				$button = $button1 . " " . $button3;
+			} else{
+				$button = $button1 . " " . $button3. " <br> " . $button10;
 			}
 			$sub_array = array();
 			$pembaca =  $rows->id_pembaca == 0 ? 'Belum ditentukan oleh admin' : $this->db->get_where('users', array('id' => $rows->id_pembaca))->row()->nama;

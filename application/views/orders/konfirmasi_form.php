@@ -39,16 +39,42 @@
 							<input type="text" class="form-control" name="nama" id="nama" placeholder="nama" value="<?php echo $nama; ?>" />
 						</div>
 					</div>
+
 					<div class="form-group row">
 						<label class="col-sm-12 col-md-2 col-form-label">Total tagihan Client </label>
 						<div class="col-sm-12 col-md-10">
 							<input type="text" class="form-control" name="total" id="total" placeholder="total" value="<?php echo number_format($total, 0, ',', '.'); ?>" />
 						</div>
 					</div>
+
 					<div class="form-group row">
 						<label class="col-sm-12 col-md-2 col-form-label">Bukti Pembayaran </label>
 						<div class="col-md-12 col-md-10">
 							<img src="<?= base_url('uploads/user_image/' . $bukti_pembayaran) ?>" width="100%" alt="">
+						</div>
+					</div>
+
+
+					<div class="form-group row">
+						<label class="col-sm-12 col-md-2 col-form-label">Status</label>
+						<div class="col-sm-12 col-md-10">
+							<select name="status_pembayaran" id="status_pembayaran" class="form-control">
+								<?php
+								$status = "Pilih status";
+								if ($status_pembayaran == 0) {
+									$status = "Belum dibayar";
+								} elseif ($status_pembayaran == 1) {
+									$status = "Menunggu konfirmasi";
+								} elseif ($status_pembayaran == 2) {
+									$status = "Tolak";
+								} else {
+									$status = "Valid";
+								}
+								?>
+								<option value="<?= $status_pembayaran ?>"><?=$status?></option>
+								<option value="2">Tolak</option>
+								<option value="3">Valid</option>
+							</select>
 						</div>
 					</div>
 

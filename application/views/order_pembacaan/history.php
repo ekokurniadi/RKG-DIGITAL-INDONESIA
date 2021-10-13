@@ -5,12 +5,12 @@
         <div class="row">
           <div class="col-md-6 col-sm-12">
             <div class="title">
-              <h4>Order pembacaan</h4>
+              <h4>History Order pembacaan</h4>
             </div>
             <nav aria-label="breadcrumb" role="navigation">
               <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="<?php echo base_url(); ?>dashboard">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Order pembacaan</li>
+                <li class="breadcrumb-item active" aria-current="page">History Order pembacaan</li>
               </ol>
             </nav>
           </div>
@@ -19,9 +19,8 @@
       <!-- Simple Datatable start -->
       <div class="card-box mb-30">
         <div class="pd-20">
-          <h4 class="text-dark h4"><i class="icon-copy dw dw-newspaper"></i> Order pembacaan</h4>
-          <?php echo anchor(site_url('order_pembacaan/create'), '<i class="icon-copy dw dw-add-file-1"></i> Add New', 'class="btn btn-primary"'); ?>
-					<?php echo anchor(site_url('order_pembacaan/history'), ' History', 'class="btn btn-danger"'); ?>
+          <h4 class="text-dark h4"><i class="icon-copy dw dw-newspaper"></i> History Order pembacaan</h4>
+          <?php echo anchor(site_url('order_pembacaan'), '<i class="icon-copy dw dw-add-file-1"></i> Kembali', 'class="btn btn-primary"'); ?>
 				</div>
         <div class="pb-20">
           <div class="table-responsive">
@@ -50,7 +49,7 @@
                     [10, 25, 50, 75, 100]
                   ],
                   "ajax": {
-                    url: "<?php echo site_url('order_pembacaan/fetch_data'); ?>",
+                    url: "<?php echo site_url('order_pembacaan/fetch_data_history'); ?>",
                     type: "POST",
                     dataSrc: "data",
                     data: function(d) {
