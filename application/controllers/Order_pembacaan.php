@@ -71,7 +71,19 @@ class Order_pembacaan extends MY_Controller
 			"id_user" => $row->id_pembaca,
 		);
 
+		$link = base_url() . "order_pembacaan";
+		$namaClient = "";
+		$namaClient = $this->db->get_where('users', array('id' => $row->id_client))->row();
+		$message = "";
+		$message .= "<h3>Email Pemberitahuan</h3><hr>
+		Kepada Yth. <br>
+		$namaClient->nama<br><br>
+		Kami menginformasikan bahwa order anda $row->id_order telah diselesaikan oleh pemesan.
+		";
+
+
 		if ($update) {
+			$this->Email_model->sendEmail($message, $namaClient->username);
 			$insert = $this->db->insert('notifikasi', $data);
 			$_SESSION['pesan'] = "Order anda berhasil di selesaikan";
 			$_SESSION['tipe'] = "success";
@@ -266,7 +278,7 @@ class Order_pembacaan extends MY_Controller
 			$button8 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/view_invoice/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Invoice</a>";
 			$button9 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/complete/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-primary btn-flat btn-sm' onclick='javascript: return confirm(\"Are You Sure ?\")' style='color: white;'>Selesaikan Order</a>";
 			$button10 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/download_hasil_pembacaan/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Download Hasil Pembacaan</a>";
-			$button11 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/tes_email/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Download Hasil Pembacaan</a>";
+			// $button11 = "<a style='margin-bottom:3px' href=" . base_url('order_pembacaan/tes_email/' . encrypt_url($rows->id)) . " data-color='white' class='btn btn-success btn-flat btn-sm' style='color: white;'>Download Hasil Pembacaan</a>";
 			$button6 = "<button type='button' onclick='open_modal(" . $rows->id . ")' data-color='white' class='btn btn-info btn-flat btn-sm' style='color: white;'>Upload Bukti Pembayaran</button>";
 			if ($rows->status == 10) {
 				$button = $button1 . " " . $button2 . "<br> " . $button4 . " " . $button3;
@@ -343,7 +355,7 @@ class Order_pembacaan extends MY_Controller
                 <div class='col-md-12'><i class='icon-copy dw dw-agenda1' style='font-size:20px'></i> No.Rekam Medis : " . $rows->no_rekam_medis . "</div>
                
                 <div class='col-md-12'><i class='icon-copy dw dw-calendar-1' style='font-size:20px'></i> Tanggal Order : " . tgl_indo(substr($rows->created_at, 0, 10)) . "</div>
-                <div class='col-md-12'><i class='icon-copy dw dw-money-2' style='font-size:20px'></i> Tarif : <span class='badge badge-md bg-danger text-white' style='font-size:15px'>Rp. " . number_format($rows->tarif, 0, ',', '.') . "</span></div>
+                <div class='col-md-12'><i class='icon-copy dw dw-money-2' style='font-size:20px'></i> Tarif : <span class='badge badge-md bg-danger text-white' style='font-size:15px'>Rp. " . number_format($rows->tarif + $rows->harga_tambahan, 0, ',', '.') . "</span></div>
                 <div class='col-md-12'><i class='icon-copy dw dw-house-11' style='font-size:18px'></i> Nama Bank : " . $nama_bank . "</div>
                 <div class='col-md-12'><i class='icon-copy dw dw-agenda' style='font-size:18px'></i> Atas Nama : " . $atas_nama . "</div>
                 <div class='col-md-12'><i class='icon-copy dw dw-wallet-1' style='font-size:18px'></i> No Rekening : " . $no_rek . "</div>
@@ -431,10 +443,11 @@ class Order_pembacaan extends MY_Controller
 		}
 	}
 
-	public function tes_email($id){
-		$link = base_url()."order_pembacaan/view_hasil/".$id;
-		$message ="";
-		$message.="<h3>Email Pemberitahuan</h3><hr>
+	public function tes_email($id)
+	{
+		$link = base_url() . "order_pembacaan/view_hasil/" . $id;
+		$message = "";
+		$message .= "<h3>Email Pemberitahuan</h3><hr>
 		Kepada Yth. <br>
 		$id<br><br>
 		Kami menginformasikan bahwa order anda dengan kode $id telah berhasil di proses
@@ -522,6 +535,15 @@ class Order_pembacaan extends MY_Controller
 		if (upload_gambar_biasa('foto_profil', 'uploads/user_image/', 'jpeg|png|jpg|gif|svg|SVG', 10000, 'foto_profil')) {
 			$this->db->where('id', $_POST['id']);
 			$this->db->update('order_pembacaan', array('status_pembayaran' => 1, 'bukti_pembayaran' => upload_gambar_biasa('foto_profil', 'uploads/user_image/', 'jpeg|png|jpg|gif|svg|SVG', 10000, 'foto_profil')));
+			$id_order = $this->db->get_where('order_pembacaan',array('id'=>$_POST['id']))->row()->id_order;
+			$link = base_url() . "konfirmasi_pembayaran";
+			$mail = "";
+			$mail .= "<h3>Email Pemberitahuan</h3><hr>
+				Kepada Yth. <br>
+				Admin RKG INDONESIA<br><br>
+				Kami menginformasikan bahwa client telah melakukan upload bukti pembayaran pada kode order $id_order, klik link $link berikut untuk melihat data .
+				";
+			$this->Email_model->sendEmail($mail, "indonesiarkg@gmail.com");
 			echo json_encode(array(
 				"status" => 200,
 				"data" => base_url() . "uploads/user_image/" . upload_gambar_biasa('foto_profil', 'image/', 'jpeg|png|jpg|gif|svg|SVG', 10000, 'foto_profil')
@@ -660,9 +682,21 @@ class Order_pembacaan extends MY_Controller
 			"link" => "panel",
 			"id_user" => $row->id_pembaca,
 		);
+
+		$link = base_url() . "orders";
+		$namaClient = "";
+		$namaClient = $this->db->get_where('users', array('id' => $row->id_client))->row();
+		$mail = "";
+		$mail .= "<h3>Email Pemberitahuan</h3><hr>
+			Kepada Yth. <br>
+			$namaClient->nama<br><br>
+			Kami menginformasikan bahwa {$_SESSION['nama']} telah mengajukan revisi pada kode order $row->id_order, klik link $link berikut untuk melihat data .
+			";
+
 		if ($insert) {
 			$this->db->where('id', $id);
 			$this->db->update('order_pembacaan', array('status' => 4));
+			$this->Email_model->sendEmail($mail, $namaClient->username);
 			$insert = $this->db->insert('notifikasi', $message);
 			echo json_encode(array(
 				"status" => 200,
@@ -708,6 +742,7 @@ class Order_pembacaan extends MY_Controller
 			"link" => "panel",
 			"id_user" => $row->id_pembaca,
 		);
+
 		$insert = $this->db->insert('notifikasi', $message);
 		echo json_encode(array(
 			"data" => $data
@@ -850,6 +885,18 @@ class Order_pembacaan extends MY_Controller
 			}
 
 			$this->Order_pembacaan_model->insert($data);
+			$link = base_url() . "orders";
+			$namaClient = "";
+			$namaClient = $this->db->get_where('users', array('id' => $_SESSION['id']))->row();
+			$mail = "";
+			$mail .= "<h3>Email Pemberitahuan</h3><hr>
+			Kepada Yth. <br>
+			Admin RKG Indonesia<br><br>
+			Kami menginformasikan bahwa {$_SESSION['nama']} telah mengajukan order pembacaan dengan kode order {$_POST['id_order']}, klik link $link berikut untuk melihat data .
+			";
+
+			$this->Email_model->sendEmail($mail, "indonesiarkg@gmail.com");
+
 			$_SESSION['pesan'] = "Create Record Success";
 			$_SESSION['tipe'] = "success";
 			redirect(site_url('order_pembacaan'));

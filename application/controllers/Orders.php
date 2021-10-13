@@ -6,6 +6,7 @@ class Orders extends MY_Controller
 	{
 		parent::__construct();
 		$this->load->model('Order_pembacaan_model');
+		$this->load->model('Email_model');
 		$this->load->library('form_validation');
 	}
 
@@ -235,13 +236,28 @@ class Orders extends MY_Controller
 	public function simpan_data()
 	{
 		$id = $this->input->post('id');
+		$idOrder = $this->input->post('id_order');
 		$id_pembaca = $this->input->post('id_pembaca');
 		$tarif = $this->input->post('tarif');
 		$this->db->where('id', $id);
 		$update = $this->db->update('order_pembacaan', array('status' => 1, 'id_pembaca' => $id_pembaca, 'tarif' => $tarif));
+
+
+		$link = base_url() . "orders";
+		$namaClient = "";
+		$namaClient = $this->db->get_where('users', array('id' => $id_pembaca))->row();
+		$mail = "";
+		$mail .= "<h3>Email Pemberitahuan</h3><hr>
+			Kepada Yth. <br>
+			$namaClient->nama<br><br>
+			Kami menginformasikan bahwa anda mendapatkan order pembacaan gambar dengan kode order $idOrder, klik link $link berikut untuk melihat data .
+			";
 		if ($update) {
+			
 			$_SESSION['pesan'] = "Success mengirimkan order";
 			$_SESSION['tipe'] = "success";
+			$this->Email_model->sendEmail($mail, $namaClient->username);
+
 			echo json_encode(array(
 				"status" => 200,
 				"link" => base_url('orders'),
@@ -589,6 +605,11 @@ class Orders extends MY_Controller
 			];
 		}
 		date_default_timezone_set('Asia/Jakarta');
+		$link = base_url() . "order_pembacaan";
+		$namaClient = "";
+		$namaClient = $this->db->get_where('users', array('id' => $idClient))->row();
+		$mail = "";
+
 		if ($revisi == "") {
 			$message = array(
 				"pesan" => $_SESSION['nama'] . " sudah menyelesaikan pembacaan gambar.",
@@ -598,6 +619,12 @@ class Orders extends MY_Controller
 				"link" => "order_pembacaan/view_hasil/" . $id,
 				"id_user" => $idClient,
 			);
+			$mail .= "<h3>Email Pemberitahuan</h3><hr>
+			Kepada Yth. <br>
+			$namaClient->nama<br><br>
+			Kami menginformasikan bahwa {$_SESSION['nama']} telah menyelesaikan pembacaan gambar kode order $idOrder, klik link $link berikut untuk melihat data .
+			";
+			$this->Email_model->sendEmail($mail, $namaClient->username);
 		} else {
 			$message = array(
 				"pesan" => $_SESSION['nama'] . " sudah menyelesaikan revisi pembacaan gambar.",
@@ -607,6 +634,12 @@ class Orders extends MY_Controller
 				"link" => "order_pembacaan/view_hasil/" . $id,
 				"id_user" => $idClient,
 			);
+			$mail .= "<h3>Email Pemberitahuan</h3><hr>
+			Kepada Yth. <br>
+			$namaClient->nama<br><br>
+			Kami menginformasikan bahwa {$_SESSION['nama']} telah menyelesaikan revisi pembacaan gambar kode order $idOrder, klik link $link berikut untuk melihat data .
+			";
+			$this->Email_model->sendEmail($mail, $namaClient->username);
 		}
 
 		if ($update) {
