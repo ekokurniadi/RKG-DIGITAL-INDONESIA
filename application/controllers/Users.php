@@ -343,9 +343,7 @@ class Users extends MY_Controller
 			'nama' => set_value('nama'),
 			'username' => set_value('username'),
 			'password' => set_value('password'),
-			'nama_bank' => set_value('nama_bank'),
-			'atas_nama' => set_value('atas_nama'),
-			'no_rek' => set_value('no_rek'),
+			
 			'level' => set_value('level'),
 		);
 
@@ -382,9 +380,6 @@ class Users extends MY_Controller
 				'nama' => $this->input->post('nama', TRUE),
 				'username' => $this->input->post('username', TRUE),
 				'password' => $this->input->post('password', TRUE),
-				'nama_bank' => $this->input->post('nama_bank', TRUE),
-				'atas_nama' => $this->input->post('atas_nama', TRUE),
-				'no_rekening' => $this->input->post('no_rek', TRUE),
 				'level' => "Pembaca Gambar",
 				"lengkap" => 1
 			);
@@ -392,7 +387,7 @@ class Users extends MY_Controller
 			$this->Users_model->insert($data);
 			$_SESSION['pesan'] = "Create Record Success";
 			$_SESSION['tipe'] = "success";
-			redirect(site_url('users/administrator'));
+			redirect(site_url('users/pembaca'));
 		}
 	}
 	public function create_administrator_action()
@@ -431,9 +426,7 @@ class Users extends MY_Controller
 				'sip' => set_value('sip', $row->sip),
 				'username' => set_value('username', $row->username),
 				'password' => set_value('password', $row->password),
-				'nama_bank' => set_value('nama_bank', $row->nama_bank),
-				'atas_nama' => set_value('atas_nama', $row->atas_nama),
-				'no_rek' => set_value('no_rek', $row->no_rekening),
+				
 				'level' => set_value('level', $row->level),
 			);
 			$this->load->view('header');
@@ -481,9 +474,7 @@ class Users extends MY_Controller
 				'nama' => $this->input->post('nama', TRUE),
 				'username' => $this->input->post('username', TRUE),
 				'password' => $this->input->post('password', TRUE),
-				'nama_bank' => $this->input->post('nama_bank', TRUE),
-				'atas_nama' => $this->input->post('atas_nama', TRUE),
-				'no_rekening' => $this->input->post('no_rek', TRUE),
+				
 				'level' => $this->input->post('level', TRUE),
 			);
 

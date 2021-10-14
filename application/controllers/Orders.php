@@ -536,6 +536,7 @@ class Orders extends MY_Controller
 
 	public function save()
 	{
+		$bankAdmin = $this->db->query("SELECT * FROM master_bank limit 1")->row();
 		$details = $_POST['details'];
 		$idOrder = $_POST['idOrder'];
 		$idClient = $_POST['id_client'];
@@ -545,9 +546,9 @@ class Orders extends MY_Controller
 		$hargaPembacaan = $_POST['harga_pembacaan'];
 		$hargaTambahan = $_POST['harga_tambahan'];
 		$id = $_POST['id'];
-		$namaBank = $_SESSION['nama_bank'];
-		$noRek = $_SESSION['no_rekening'];
-		$atasNama = $_SESSION['atas_nama'];
+		$namaBank =$bankAdmin->nama_bank;
+		$noRek = $bankAdmin->nomor_rekening;
+		$atasNama = $bankAdmin->atas_nama;
 		$revisi = isset($_POST['revisi']) ? $_POST['revisi'] : "";
 		foreach ($details as $dj) {
 			$detail_pembacaan[] = [

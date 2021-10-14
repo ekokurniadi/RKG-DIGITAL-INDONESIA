@@ -80,7 +80,7 @@ class Master_harga_pembaca extends MY_Controller
 		$index = 1;
 		$button = "";
 		$fetch = $this->db->query("SELECT * from master_harga_pembaca $where");
-		$fetch2 = $this->db->query("SELECT * from master_harga_pembaca ");
+		$fetch2 = $this->db->query("SELECT * from master_harga_pembaca $where");
 		foreach ($fetch->result() as $rows) {
 			$button1 = "<a href=" . base_url('master_harga_pembaca/read/' . $rows->id) . " data-color='#265ed7' style='color: rgb(38, 94, 215);'><i class='icon-copy dw dw-eye'></i></a>";
 			$button2 = "<a href=" . base_url('master_harga_pembaca/update/' . $rows->id) . " data-color='orange' style='color: orange'><i class='icon-copy dw dw-edit1'></i></a>";

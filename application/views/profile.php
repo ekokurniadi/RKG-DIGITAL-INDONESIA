@@ -36,7 +36,7 @@
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Username <?php echo form_error('username') ?></label>
                         <div class="col-sm-12 col-md-10">
-                            <input type="text" class="form-control" name="username" id="username" placeholder="Username" value="<?php echo $username; ?>" />
+                            <input type="text" readonly class="form-control" name="username" id="username" placeholder="Username" value="<?php echo $username; ?>" />
                         </div>
                     </div>
 
@@ -50,7 +50,7 @@
                     <div class="form-group row">
                         <label class="col-sm-12 col-md-2 col-form-label">Level <?php echo form_error('level') ?></label>
                         <div class="col-sm-12 col-md-10">
-                            <input type="text" class="form-control" name="level" id="level" placeholder="Level" value="<?php echo $level; ?>" />
+                            <input type="text" readonly class="form-control" name="level" id="level" placeholder="Level" value="<?php echo $level; ?>" />
                         </div>
                     </div>
 

@@ -712,6 +712,7 @@ class Order_pembacaan extends MY_Controller
 
 	public function uploadFotoAction()
 	{
+		$emailAdmin = $this->db->query("SELECT * FROM setting")->row();
 		if (upload_gambar_biasa('foto_profil', 'uploads/user_image/', 'jpeg|png|jpg|gif|svg|SVG', 10000, 'foto_profil')) {
 			$this->db->where('id', $_POST['id']);
 			$this->db->update('order_pembacaan', array('status_pembayaran' => 1, 'bukti_pembayaran' => upload_gambar_biasa('foto_profil', 'uploads/user_image/', 'jpeg|png|jpg|gif|svg|SVG', 10000, 'foto_profil')));
@@ -723,7 +724,7 @@ class Order_pembacaan extends MY_Controller
 				Admin RKG INDONESIA<br><br>
 				Kami menginformasikan bahwa client telah melakukan upload bukti pembayaran pada kode order $id_order, klik link $link berikut untuk melihat data .
 				";
-			$this->Email_model->sendEmail($mail, "indonesiarkg@gmail.com");
+			$this->Email_model->sendEmail($mail, $emailAdmin->email);
 			echo json_encode(array(
 				"status" => 200,
 				"data" => base_url() . "uploads/user_image/" . upload_gambar_biasa('foto_profil', 'image/', 'jpeg|png|jpg|gif|svg|SVG', 10000, 'foto_profil')
@@ -1063,7 +1064,7 @@ class Order_pembacaan extends MY_Controller
 				);
 				$this->db->insert('detail_pemeriksaan', $detail);
 			}
-
+			$emailAdmin = $this->db->query("SELECT * FROM setting")->row();
 			$this->Order_pembacaan_model->insert($data);
 			$link = base_url() . "orders";
 			$namaClient = "";
@@ -1075,7 +1076,7 @@ class Order_pembacaan extends MY_Controller
 			Kami menginformasikan bahwa {$_SESSION['nama']} telah mengajukan order pembacaan dengan kode order {$_POST['id_order']}, klik link $link berikut untuk melihat data .
 			";
 
-			$this->Email_model->sendEmail($mail, "indonesiarkg@gmail.com");
+			$this->Email_model->sendEmail($mail, $emailAdmin->email);
 
 			$_SESSION['pesan'] = "Create Record Success";
 			$_SESSION['tipe'] = "success";

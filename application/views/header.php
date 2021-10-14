@@ -250,14 +250,28 @@
 							<span class="micon dw dw-house-1"></span><span class="mtext">Dashboard</span>
 						</a>
 					</li>
-					<?php $menu = $this->db->query("SELECT a.menu,a.link from menu a join access_level b on a.id=b.menu where b.user_level='{$_SESSION['level']}' and b.status='1' order by a.urutan asc"); ?>
-					<?php foreach ($menu->result() as $rows) : ?>
-						<li>
-							<a href="<?php echo base_url($rows->link) ?>" class="dropdown-toggle no-arrow">
-								<span class="micon dw dw-apartment"></span><span class="mtext"><?= $rows->menu ?></span>
-							</a>
-						</li>
-					<?php endforeach; ?>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle" data-option="off">
+							<span class="micon dw dw-library"></span><span class="mtext">Master Data</span>
+						</a>
+						<ul class="submenu">
+							<?php $menu = $this->db->query("SELECT a.menu,a.link from menu a join access_level b on a.id=b.menu where b.user_level='{$_SESSION['level']}' and b.status='1' and jenis='master' order by a.menu asc"); ?>
+							<?php foreach ($menu->result() as $rows) : ?>
+								<li><a href="<?php echo base_url($rows->link) ?>"><?= $rows->menu ?></a></li>
+							<?php endforeach; ?>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle" data-option="off">
+							<span class="micon dw dw-notepad-2"></span><span class="mtext">Transaksi</span>
+						</a>
+						<ul class="submenu">
+							<?php $menu = $this->db->query("SELECT a.menu,a.link from menu a join access_level b on a.id=b.menu where b.user_level='{$_SESSION['level']}' and b.status='1' and jenis !='master' order by a.urutan asc"); ?>
+							<?php foreach ($menu->result() as $rows) : ?>
+								<li><a href="<?php echo base_url($rows->link) ?>"><?= $rows->menu ?></a></li>
+							<?php endforeach; ?>
+						</ul>
+					</li>
 				</ul>
 			</div>
 		</div>

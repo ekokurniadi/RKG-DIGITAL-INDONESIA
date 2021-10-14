@@ -53,24 +53,7 @@
 							<input type="text" class="form-control" name="password" id="password" placeholder="Password" value="<?php echo $password; ?>" />
 						</div>
 					</div>
-					<div class="form-group row">
-						<label class="col-sm-12 col-md-2 col-form-label">Nama Bank <?php echo form_error('nama') ?></label>
-						<div class="col-sm-12 col-md-10">
-							<input type="text" class="form-control" name="nama_bank" id="nama_bank" placeholder="Nama" value="<?php echo $nama_bank; ?>" />
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-12 col-md-2 col-form-label">Atas Nama <?php echo form_error('nama') ?></label>
-						<div class="col-sm-12 col-md-10">
-							<input type="text" class="form-control" name="atas_nama" id="atas_nama" placeholder="Atas Nama" value="<?php echo $atas_nama; ?>" />
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-12 col-md-2 col-form-label">No. Rek <?php echo form_error('nama') ?></label>
-						<div class="col-sm-12 col-md-10">
-							<input type="text" class="form-control" name="no_rek" id="no_rek" placeholder="Nama" value="<?php echo $no_rek; ?>" />
-						</div>
-					</div>
+					
 
 					<input type="hidden" class="form-control" name="level" id="level" placeholder="Level" value="<?php echo $level; ?>" />
 
