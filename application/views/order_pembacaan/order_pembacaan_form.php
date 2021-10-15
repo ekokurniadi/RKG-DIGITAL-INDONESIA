@@ -256,13 +256,13 @@
 												}
 											}
 											?>
-											<td style="border-bottom: 2px solid green;">
+											<td style="border-bottom: 2px solid black;">
 												<?php echo $ka->angka ?>
 												<input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="kiri_atas[]">
 											</td>
 										<?php endforeach; ?>
 										<td width="20px" rowspan="2" align="center">
-											<div style="background-color: green;width:2px">&nbsp;</div>
+											<div style="background-color: black;width:2px">&nbsp;</div>
 										</td>
 										<?php
 										$kanan = $this->db->query("SELECT * from regio_kanan_atas order by id ASC")->result() ?>
@@ -278,7 +278,7 @@
 												}
 											}
 											?>
-											<td style="border-bottom: 2px solid green;">
+											<td style="border-bottom: 2px solid black;">
 												<?php echo $kn->angka ?>
 												<input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $kn->id ?>" name="kanan_atas[]">
 											</td>
@@ -303,7 +303,7 @@
 												<input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="kiri_bawah[]">
 											</td>
 										<?php endforeach; ?>
-										<!-- <td width="5px" rowspan="2" align="left"><div style="background-color: green;width:2px">&nbsp;</div></td> -->
+										<!-- <td width="5px" rowspan="2" align="left"><div style="background-color: black;width:2px">&nbsp;</div></td> -->
 										<?php
 										$kanan = $this->db->query("SELECT * from regio_kanan_bawah order by id ASC")->result() ?>
 										<?php foreach ($kanan as $kn) : ?>
@@ -351,13 +351,13 @@
 												}
 											}
 											?>
-											<td style="border-bottom: 2px solid green;">
+											<td style="border-bottom: 2px solid black;">
 												<?php echo $ka->angka ?>
 												<input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="romawi_kiri_atas[]">
 											</td>
 										<?php endforeach; ?>
 										<td width="20px" rowspan="2" align="center">
-											<div style="background-color: green;width:2px">&nbsp;</div>
+											<div style="background-color: black;width:2px">&nbsp;</div>
 										</td>
 										<?php
 										$kanan = $this->db->query("SELECT * from regio_romawi_kanan_atas order by id ASC")->result() ?>
@@ -373,7 +373,7 @@
 												}
 											}
 											?>
-											<td style="border-bottom: 2px solid green;">
+											<td style="border-bottom: 2px solid black;">
 												<?php echo $kn->angka ?>
 												<input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $kn->id ?>" name="romawi_kanan_atas[]">
 											</td>
@@ -398,7 +398,7 @@
 												<input <?= $button == 'Read' ? 'readonly' : "" ?> type="checkbox" <?= $state ?> value="<?php echo $ka->id ?>" name="romawi_kiri_bawah[]">
 											</td>
 										<?php endforeach; ?>
-										<!-- <td width="5px" rowspan="2" align="left"><div style="background-color: green;width:2px">&nbsp;</div></td> -->
+										<!-- <td width="5px" rowspan="2" align="left"><div style="background-color: black;width:2px">&nbsp;</div></td> -->
 										<?php
 										$kanan = $this->db->query("SELECT * from regio_romawi_kanan_bawah order by id ASC")->result() ?>
 										<?php foreach ($kanan as $kn) : ?>

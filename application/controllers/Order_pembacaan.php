@@ -609,6 +609,20 @@ class Order_pembacaan extends MY_Controller
 			$mpdf->charset_in               = 'UTF-8';
 			$mpdf->autoLangToFont           = true;
 			$mpdf->AddPage('P');
+			// $mpdf = new mPDF(
+			// 	'',    // mode - default ''
+			// 	'',    // format - A4, for example, default ''
+			// 	0,     // font size - default 0
+			// 	'',    // default font family
+			// 	0,    // margin_left
+			// 	0,    // margin right
+			// 	0,     // margin top
+			// 	0,    // margin bottom
+			// 	0,     // margin header
+			// 	0,     // margin footer
+			// 	'P'
+			// );
+			$mpdf->SetDisplayMode('fullwidth');
 			$html = $this->load->view('invoice', $data, true);
 			$mpdf->WriteHTML($html);
 			$output = 'Invoice Pembacaan Gambar' . '.pdf';
@@ -851,7 +865,7 @@ class Order_pembacaan extends MY_Controller
 			"revisi" => $revisi,
 			"tanggal_revisi" => $tanggal,
 			"jawaban_revisi" => "",
-			"tanggal_jawab" => "",
+			"tanggal_jawab" => "0000-00-00",
 		);
 		$insert = $this->db->insert('revisi', $data);
 		$row = $this->Order_pembacaan_model->get_by_id($id);
@@ -881,7 +895,7 @@ class Order_pembacaan extends MY_Controller
 			$insert = $this->db->insert('notifikasi', $message);
 			echo json_encode(array(
 				"status" => 200,
-				"pesan" => "Order berhasil di teruskan ke pembaca gambar",
+				"pesan" => "Revisi Order berhasil di teruskan ke pembaca gambar",
 				"link" => base_url('order_pembacaan'),
 			));
 		} else {

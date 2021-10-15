@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/vendors/styles/core.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/vendors/styles/style.css">
-<div class="invoice-wrap">
+<div style="background-color: black !important;width:100%;padding:0">
     <div class="invoice-box">
         <div class="invoice-header">
             <div class="logo text-left" style="display: flex;">
@@ -26,14 +26,16 @@
             <div class="invoice-desc-head clearfix">
                 <div class="invoice-sub">Deskripsi</div>
                 <div class="invoice-rate">Tarif</div>
+                <div class="invoice-rate">Tambahan</div>
                 <div class="invoice-subtotal">Subtotal</div>
             </div>
             <div class="invoice-desc-body">
                 <ul>
                     <li class="clearfix">
                         <div class="invoice-sub">Pembacaan Radiologi</div>
-                        <div class="invoice-rate">Rp.<?php echo number_format($tarif+$harga_tambahan,0,',','.') ?></div>
-                        <div class="invoice-subtotal"><span class="weight-600">Rp.<?php echo number_format($tarif+$harga_tambahan,0,',','.') ?></span></div>
+                        <div class="invoice-rate">Rp.<?php echo number_format($tarif,0,',','.') ?></div>
+                        <div class="invoice-rate">Rp.<?php echo number_format($harga_tambahan,0,',','.') ?></div>
+                        <div class="invoice-subtotal"><span class="weight-600" >Rp.<?php echo number_format($tarif+$harga_tambahan,0,',','.') ?></span></div>
                     </li>
 
                 </ul>

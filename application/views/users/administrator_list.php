@@ -20,7 +20,7 @@
       <div class="card-box mb-30">
         <div class="pd-20">
           <h4 class="text-dark h4"><i class="icon-copy dw dw-newspaper"></i> Administrator</h4>
-          <?php echo anchor(site_url('users/create_administrator'), '<i class="icon-copy dw dw-add-file-1"></i> Add New', 'class="btn btn-primary"'); ?>
+          <?php echo anchor(site_url('users/create_administrator'), '<i class="icon-copy dw dw-add-file-1"></i> Add New', 'class="btn btn-primary bg-dark"'); ?>
         </div>
         <div class="pb-20">
           <div class="table-responsive">

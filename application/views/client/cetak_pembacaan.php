@@ -96,7 +96,7 @@
 				<p>:</p>
 			</th>
 			<th width="250px" style="text-align: left;">
-				<p>drg.</p>
+				<p><?=$dokter_pengirim?></p>
 			</th>
 			<th width="20px"></th>
 			<th width="100px">

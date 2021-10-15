@@ -3988,7 +3988,8 @@ body.IE .register-page-wrap .container {
 }
 
 .invoice-wrap {
-    overflow: auto
+    overflow: auto;
+    background: black;
 }
 
 .invoice-box {
@@ -4003,7 +4004,7 @@ body.IE .register-page-wrap .container {
 }
 
 .invoice-desc .invoice-sub {
-    width: 40%;
+    width: 20%;
     float: left;
     padding: 8px 15px
 }
