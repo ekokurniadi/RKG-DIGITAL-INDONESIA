@@ -117,7 +117,13 @@
 		</tr>
 	</table> -->
 	<hr style="margin-top: -40px;color:black;height:2px;margin-left:30px;margin-right:30px;width:90%" >
-	<table style="margin-top: -50px;margin-right:50;margin-left:50">
+	<table width="100%" style="margin-top: -50px">
+	    <tr>
+	        <th><h3 style="font-weight:bold">FORMULIR RADIOLOGI</h3></th>
+	    </tr>
+	</table>
+	
+	<table style="margin-top: 0px;margin-right:50;margin-left:50">
 
 		<tr>
 			<td width="15%">
@@ -515,9 +521,9 @@
 			</div>
 		</div>
 	</div>
-	<table width="100%" style="position:absolute;bottom:0;margin-top:10px">
+	<table width="100%" style="position:absolute;bottom:0;margin-top:0px">
 		<tr>
-			<th style="background-image: url('<?= base_url() ?>uploads/shape-2.PNG');width:100%;height:300px; fit-content:cover;position:absolute;top:0;bottom:0;left:0; background-position: bottom center;background-repeat:no-repeat;"></th>
+			<th style="background-image: url('<?= base_url() ?>uploads/shape-2.PNG');width:100%;height:220px; fit-content:cover;position:absolute;top:0;bottom:0;left:0; background-position: bottom center;background-repeat:no-repeat;"></th>
 		</tr>
 	</table>
 </body>
